@@ -99,12 +99,11 @@ button { font-family: var(--font-body); cursor: none; }
 #loading-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
 .loading-medallion { width: 110px; height: 110px; }
-.loading-medallion circle {
+.loading-medallion > circle {
   stroke-dasharray: 900;
   stroke-dashoffset: 900;
   animation: drawMedallion 1.4s cubic-bezier(0.4,0,0.2,1) forwards;
 }
-.loading-medallion circle:last-of-type { animation-delay: 0.5s; }
 .loading-sun-rays {
   opacity: 0;
   animation: fadeInRays 0.5s ease forwards 0.25s;
