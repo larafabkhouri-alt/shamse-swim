@@ -6,7 +6,7 @@
   <title>Shamse Swim — Sun-kissed swimwear. Palestinian soul.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Fraunces:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -14,9 +14,9 @@
   <!-- ── Custom cursor ── -->
   <canvas id="cursor-canvas"></canvas>
   <div id="cursor-dot" aria-hidden="true">
-    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="10,1 11.5,6.5 17,5 13,9 18,11.5 12.5,11.5 14,17 10,14 6,17 7.5,11.5 2,11.5 7,9 3,5 8.5,6.5" fill="#C9A84C"/>
-      <circle cx="10" cy="10" r="2.5" fill="#C9A84C"/>
+    <svg viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="11,1 12.6,6.8 18.5,4.5 14.4,9.5 20,11 14.4,12.5 18.5,17.5 12.6,15.2 11,21 9.4,15.2 3.5,17.5 7.6,12.5 2,11 7.6,9.5 3.5,4.5 9.4,6.8" fill="#C9A84C"/>
+      <circle cx="11" cy="11" r="2.8" fill="#C9A84C"/>
     </svg>
   </div>
 
@@ -24,8 +24,8 @@
   <div id="loading-screen" aria-hidden="true">
     <svg class="loading-medallion" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
       <circle cx="60" cy="60" r="55" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
-      <polygon points="60,8 63,24 72,12 68,27 82,18 74,32 90,28 80,40 96,40 84,50 98,58 85,60 96,68 82,68 90,82 74,78 82,92 68,85 66,100 60,88 54,100 52,85 38,92 46,78 30,82 38,68 24,68 35,60 22,58 36,50 24,40 40,40 30,28 46,32 38,18 52,27 48,12 57,24" fill="none" stroke="#C9A84C" stroke-width="1.5" stroke-linejoin="round"/>
-      <circle cx="60" cy="60" r="14" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+      <polygon points="60,8 63,24 72,12 68,27 82,18 74,32 90,28 80,40 96,40 84,50 98,58 85,60 96,68 82,68 90,82 74,78 82,92 68,85 66,100 60,88 54,100 52,85 38,92 46,78 30,82 38,68 24,68 35,60 22,58 36,50 24,40 40,40 30,28 46,32 48,12 57,24" fill="none" stroke="#C9A84C" stroke-width="1.5" stroke-linejoin="round"/>
+      <circle cx="60" cy="60" r="13" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
     </svg>
     <div class="loading-beads" aria-hidden="true">
       <div class="loading-bead"></div>
@@ -38,29 +38,39 @@
     </div>
   </div>
 
-  <!-- ── Nav ── -->
-  <nav id="nav">
-    <div class="nav-inner">
-      <div class="nav-logo">
-        <svg class="nav-sun" viewBox="0 0 40 40" aria-hidden="true">
-          <use href="#shamse-icon" />
-        </svg>
-        <span>Shamse</span>
-      </div>
-      <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
-        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <polygon points="20,2 22.5,9 29,5 25,12 33,12 27,18 33,23 26,22 28,30 21,26 20,34 19,26 12,30 14,22 7,23 13,18 7,12 15,12 11,5 18,9" fill="currentColor"/>
-          <circle cx="20" cy="20" r="5" fill="currentColor"/>
+  <!-- ── Cart Overlay + Drawer ── -->
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Shopping cart">
+    <div class="cart-header">
+      <span class="cart-title">Cart</span>
+      <button class="cart-close" id="cart-close" aria-label="Close cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
         </svg>
       </button>
-      <ul class="nav-links" id="nav-links">
-        <li><a href="#gallery">Collection</a></li>
-        <li><a href="#shop">Shop</a></li>
-        <li><a href="#beads">Beads</a></li>
-        <li><a href="https://www.instagram.com/shamse_swim/" target="_blank" rel="noopener">Instagram</a></li>
-      </ul>
     </div>
-  </nav>
+    <div class="cart-items" id="cart-items">
+      <div class="cart-empty" id="cart-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        <p>Your cart is empty</p>
+      </div>
+    </div>
+    <div class="cart-footer" id="cart-footer" style="display:none">
+      <div class="cart-tatreez-strip"></div>
+      <div class="cart-subtotal">
+        <span class="cart-subtotal-label">Subtotal</span>
+        <span class="cart-subtotal-amount" id="cart-total">$0</span>
+      </div>
+      <button class="btn-checkout" onclick="window.open('https://www.instagram.com/shamse_swim/','_blank')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        Order via @shamse_swim
+      </button>
+      <p class="cart-note">DM us on Instagram to complete your order. We'll confirm availability and payment details.</p>
+    </div>
+  </aside>
 
   <!-- ── SVG Defs ── -->
   <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
@@ -78,12 +88,45 @@
     </defs>
   </svg>
 
-  <!-- ── Section 1: Hero ── -->
+  <!-- ── Nav ── -->
+  <nav id="nav">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <svg class="nav-sun" viewBox="0 0 40 40" aria-hidden="true"><use href="#shamse-icon"/></svg>
+        <span>Shamse</span>
+      </div>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#story">Story</a></li>
+        <li><a href="#shop">Shop</a></li>
+        <li><a href="https://www.instagram.com/shamse_swim/" target="_blank" rel="noopener">Instagram</a></li>
+      </ul>
+
+      <div class="nav-right">
+        <button class="cart-btn" id="nav-cart-btn" aria-label="Open cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+          </svg>
+          <span class="cart-count" id="cart-count">0</span>
+        </button>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+          <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <polygon points="20,2 22.5,9 29,5 25,12 33,12 27,18 33,23 26,22 28,30 21,26 20,34 19,26 12,30 14,22 7,23 13,18 7,12 15,12 11,5 18,9" fill="currentColor"/>
+            <circle cx="20" cy="20" r="5" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- ── HERO ── -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <section id="hero">
     <canvas id="tatreez-canvas"></canvas>
     <div class="hero-tatreez-bg" aria-hidden="true"></div>
 
-    <!-- Floating shamse stars -->
     <div class="floating-stars" aria-hidden="true">
       <svg class="float-star s1" viewBox="0 0 100 100"><use href="#shamse-icon"/></svg>
       <svg class="float-star s2" viewBox="0 0 100 100"><use href="#shamse-icon"/></svg>
@@ -94,49 +137,51 @@
     </div>
 
     <div class="hero-content" id="hero-logo">
+      <p class="hero-eyebrow">Palestinian Swimwear</p>
       <div class="logo-wrap">
-        <svg class="logo-sun-badge" viewBox="0 0 120 120" aria-hidden="true">
-          <use href="#shamse-12"/>
-        </svg>
+        <svg class="logo-sun-badge" viewBox="0 0 120 120" aria-hidden="true"><use href="#shamse-12"/></svg>
         <h1 class="logo-text">Shamse</h1>
         <div class="logo-dash" aria-hidden="true"></div>
       </div>
+      <p class="hero-arabic" aria-label="Shamse in Arabic">شمسة</p>
       <p class="hero-tagline">Sun-kissed swimwear. Palestinian soul.</p>
-      <a href="#shop" class="hero-cta">Shop the Collection</a>
+      <div class="hero-actions">
+        <a href="#shop" class="btn-primary">Shop the Collection</a>
+        <a href="#story" class="btn-ghost">Our Story</a>
+      </div>
     </div>
 
-    <!-- Bead string settling across hero -->
     <div class="hero-bead-string" aria-hidden="true" id="hero-beads">
-      <div class="h-bead sm" style="background:#1D9E8F;animation-delay:0.1s"></div>
-      <div class="h-bead"    style="background:#C9A84C;animation-delay:0.18s"></div>
-      <div class="h-bead sm" style="background:#9B7FCC;animation-delay:0.26s"></div>
-      <div class="h-bead lg" style="background:#C9846A;animation-delay:0.34s"></div>
-      <div class="h-bead"    style="background:#E05A3A;animation-delay:0.42s"></div>
-      <div class="h-bead sm" style="background:#2A5FAC;animation-delay:0.50s"></div>
-      <div class="h-bead"    style="background:#C9A84C;animation-delay:0.58s"></div>
-      <div class="h-bead lg" style="background:#2E8B6A;animation-delay:0.66s"></div>
-      <div class="h-bead"    style="background:#D4820A;animation-delay:0.74s"></div>
-      <div class="h-bead sm" style="background:#9B7FCC;animation-delay:0.82s"></div>
-      <div class="h-bead"    style="background:#1D9E8F;animation-delay:0.90s"></div>
-      <div class="h-bead sm" style="background:#E05A3A;animation-delay:0.98s"></div>
-      <div class="h-bead lg" style="background:#C9A84C;animation-delay:1.06s"></div>
-      <div class="h-bead"    style="background:#C9846A;animation-delay:1.14s"></div>
-      <div class="h-bead sm" style="background:#2A5FAC;animation-delay:1.22s"></div>
-      <div class="h-bead"    style="background:#2E8B6A;animation-delay:1.30s"></div>
-      <div class="h-bead sm" style="background:#D4820A;animation-delay:1.38s"></div>
-      <div class="h-bead"    style="background:#9B7FCC;animation-delay:1.46s"></div>
-      <div class="h-bead lg" style="background:#C9A84C;animation-delay:1.54s"></div>
-      <div class="h-bead sm" style="background:#1D9E8F;animation-delay:1.62s"></div>
-      <div class="h-bead"    style="background:#E05A3A;animation-delay:1.70s"></div>
-      <div class="h-bead sm" style="background:#C9846A;animation-delay:1.78s"></div>
-      <div class="h-bead"    style="background:#C9A84C;animation-delay:1.86s"></div>
-      <div class="h-bead lg" style="background:#2A5FAC;animation-delay:1.94s"></div>
-      <div class="h-bead sm" style="background:#9B7FCC;animation-delay:2.02s"></div>
-      <div class="h-bead"    style="background:#2E8B6A;animation-delay:2.10s"></div>
-      <div class="h-bead sm" style="background:#D4820A;animation-delay:2.18s"></div>
-      <div class="h-bead"    style="background:#C9A84C;animation-delay:2.26s"></div>
-      <div class="h-bead lg" style="background:#E05A3A;animation-delay:2.34s"></div>
-      <div class="h-bead sm" style="background:#1D9E8F;animation-delay:2.42s"></div>
+      <div class="h-bead sm" style="background:#0D9E8F;animation-delay:0.10s"></div>
+      <div class="h-bead"    style="background:#C9A84C;animation-delay:0.17s"></div>
+      <div class="h-bead sm" style="background:#8E70C6;animation-delay:0.24s"></div>
+      <div class="h-bead lg" style="background:#CC6E82;animation-delay:0.31s"></div>
+      <div class="h-bead"    style="background:#E0522A;animation-delay:0.38s"></div>
+      <div class="h-bead sm" style="background:#2455A6;animation-delay:0.45s"></div>
+      <div class="h-bead"    style="background:#C9A84C;animation-delay:0.52s"></div>
+      <div class="h-bead lg" style="background:#1A8C6A;animation-delay:0.59s"></div>
+      <div class="h-bead"    style="background:#D47A0A;animation-delay:0.66s"></div>
+      <div class="h-bead sm" style="background:#8E70C6;animation-delay:0.73s"></div>
+      <div class="h-bead"    style="background:#0D9E8F;animation-delay:0.80s"></div>
+      <div class="h-bead sm" style="background:#E0522A;animation-delay:0.87s"></div>
+      <div class="h-bead lg" style="background:#C9A84C;animation-delay:0.94s"></div>
+      <div class="h-bead"    style="background:#CC6E82;animation-delay:1.01s"></div>
+      <div class="h-bead sm" style="background:#2455A6;animation-delay:1.08s"></div>
+      <div class="h-bead"    style="background:#1A8C6A;animation-delay:1.15s"></div>
+      <div class="h-bead sm" style="background:#D47A0A;animation-delay:1.22s"></div>
+      <div class="h-bead"    style="background:#8E70C6;animation-delay:1.29s"></div>
+      <div class="h-bead lg" style="background:#C9A84C;animation-delay:1.36s"></div>
+      <div class="h-bead sm" style="background:#0D9E8F;animation-delay:1.43s"></div>
+      <div class="h-bead"    style="background:#E0522A;animation-delay:1.50s"></div>
+      <div class="h-bead sm" style="background:#CC6E82;animation-delay:1.57s"></div>
+      <div class="h-bead"    style="background:#C9A84C;animation-delay:1.64s"></div>
+      <div class="h-bead lg" style="background:#2455A6;animation-delay:1.71s"></div>
+      <div class="h-bead sm" style="background:#8E70C6;animation-delay:1.78s"></div>
+      <div class="h-bead"    style="background:#1A8C6A;animation-delay:1.85s"></div>
+      <div class="h-bead sm" style="background:#D47A0A;animation-delay:1.92s"></div>
+      <div class="h-bead"    style="background:#C9A84C;animation-delay:1.99s"></div>
+      <div class="h-bead lg" style="background:#E0522A;animation-delay:2.06s"></div>
+      <div class="h-bead sm" style="background:#0D9E8F;animation-delay:2.13s"></div>
     </div>
 
     <div class="scroll-hint" aria-hidden="true"><span></span></div>
@@ -144,163 +189,179 @@
 
   <div class="tatreez-divider" aria-hidden="true"></div>
 
-  <!-- ── Section 2: Letters reveal ── -->
-  <section id="letters" class="reveal-section">
-    <div class="letters-image-wrap">
-      <img src="images/shamse-letters.jpg" alt="SHAMSE spelled in iridescent gemstone beads" loading="lazy" />
-      <div class="letters-overlay">
-        <p class="letters-sub">شمسة</p>
-      </div>
-    </div>
-  </section>
-
-  <div class="tatreez-divider" aria-hidden="true"></div>
-
-  <!-- ── Section 3: Gallery Grid ── -->
-  <section id="gallery" class="reveal-section section-pad">
-    <div class="section-header">
-      <h2>The Collection</h2>
-    </div>
-    <div class="gallery-grid">
-      <div class="gallery-item wide">
-        <img src="images/black-turquoise.jpg" alt="Black and turquoise tatreez bikini" loading="lazy" />
-        <div class="gallery-label">Black + Turquoise</div>
-      </div>
-      <div class="gallery-item tall">
-        <img src="images/red-bodychain.jpg" alt="Red tatreez bikini with gold body chain" loading="lazy" />
-        <div class="gallery-label">Red + Gold Chain</div>
-      </div>
-      <div class="gallery-item">
-        <img src="images/green-beach.jpg" alt="Sage green tatreez bikini at the beach" loading="lazy" />
-        <div class="gallery-label">Sage + Millefiori</div>
-      </div>
-      <div class="gallery-item">
-        <img src="images/purple-sun.jpg" alt="Purple tatreez top with gold bead strap" loading="lazy" />
-        <div class="gallery-label">Purple + Sun</div>
-      </div>
-      <div class="gallery-item">
-        <img src="images/swimsuits-wall.jpg" alt="Three swimsuits hanging on a sun-drenched wall" loading="lazy" />
-        <div class="gallery-label">The Lineup</div>
-      </div>
-    </div>
-  </section>
-
-  <div class="tatreez-divider" aria-hidden="true"></div>
-
-  <!-- ── Section 4: Tatreez Feature ── -->
-  <section id="tatreez" class="reveal-section tatreez-feature">
-    <div class="tatreez-img-wrap">
-      <img src="images/green-bikini.jpg" alt="Sage green tatreez bikini" loading="lazy" />
-      <div class="tatreez-overlay">
-        <svg class="tatreez-spin-star" viewBox="0 0 120 120" aria-hidden="true">
-          <use href="#shamse-12"/>
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- ── STORY ── -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <section id="story" class="reveal-section">
+    <div class="story-image-col">
+      <div class="ph ph-story">
+        <svg class="ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
         </svg>
-        <div class="tatreez-text">
-          <h2>Every stitch tells a story</h2>
-          <p>Palestinian tatreez embroidery, passed down through generations of women, transforms thread into memory — each geometric pattern a map of home, resistance, and belonging.</p>
-        </div>
+        <p class="ph-label">[ Full-height portrait: Palestinian woman standing at the edge of the Mediterranean at golden hour, wearing the Shamse Teal — tatreez embroidery catching the light, millefiori bead straps glinting, waves breaking softly behind her ]</p>
       </div>
+    </div>
+    <div class="story-text-col">
+      <p class="section-eyebrow">Our Story</p>
+      <h2 class="story-heading">Rooted in<br/>Palestine</h2>
+      <p class="story-body">Shamse — شمسة — means sun. It is the name of a traditional Palestinian geometric motif, an 8-pointed star that radiates outward, found on tiles, textiles, and embroidery across the Levant for centuries.</p>
+      <p class="story-body">Every piece is made with Palestinian tatreez — cross-stitch embroidery passed down through generations of women. Every bead strap is hand-strung with millefiori glass, turquoise stone, and gemstones from across the Mediterranean. No two are exactly alike.</p>
+      <div class="story-bead-row" aria-hidden="true">
+        <div class="sb" style="background:#0D9E8F"></div>
+        <div class="sb" style="background:#C9A84C"></div>
+        <div class="sb" style="background:#8E70C6"></div>
+        <div class="sb" style="background:#CC6E82"></div>
+        <div class="sb" style="background:#E0522A"></div>
+        <div class="sb" style="background:#2455A6"></div>
+        <div class="sb" style="background:#1A8C6A"></div>
+        <div class="sb" style="background:#D47A0A"></div>
+        <div class="sb" style="background:#C9A84C"></div>
+        <div class="sb" style="background:#0D9E8F"></div>
+      </div>
+      <a href="https://www.instagram.com/shamse_swim/" target="_blank" rel="noopener" class="btn-text-link">Follow our journey →</a>
     </div>
   </section>
 
   <div class="tatreez-divider" aria-hidden="true"></div>
 
-  <!-- ── Section 5: Shop ── -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- ── SHOP ── -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <section id="shop" class="reveal-section">
-    <div class="section-pad" style="max-width:none;padding-bottom:0">
-      <div class="section-header">
-        <h2>Shop the Sun</h2>
-        <p class="section-sub">Hand-crafted bead straps. Tatreez-inspired embroidery.</p>
-      </div>
+    <div class="shop-header">
+      <p class="section-eyebrow" style="justify-content:center">The Collection</p>
+      <h2>Shop the Sun</h2>
+      <p>Hand-crafted. Limited runs. Made in Palestine.</p>
     </div>
-    <div class="shop-grid" style="padding:0 2.5rem 6rem;max-width:1400px;margin:0 auto;">
 
-      <article class="product-card">
-        <span class="bead-tag" style="background:#1D9E8F" aria-hidden="true"></span>
-        <a href="https://www.instagram.com/shamse_swim/" target="_blank" rel="noopener" class="product-link">
-          <div class="product-img-wrap">
-            <img src="images/product-teal.jpg" alt="Teal tatreez swimsuit" loading="lazy" />
-            <svg class="product-shamse" viewBox="0 0 120 120" aria-hidden="true"><use href="#shamse-12"/></svg>
+    <div class="shop-grid">
+
+      <!-- Product 1 -->
+      <article class="product-card" data-product-id="1">
+        <div class="product-img-wrap">
+          <span class="bead-tag" style="background:#0D9E8F" aria-hidden="true"></span>
+          <div class="ph ph-teal">
+            <svg class="ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <p class="ph-label">[ The Shamse Teal — turquoise tatreez embroidery bikini with millefiori bead strap, clean white studio background, slight shadow ]</p>
           </div>
-          <div class="product-info">
-            <h3>The Shamse Teal</h3>
-            <p>Turquoise tatreez · millefiori bead strap</p>
-            <span class="product-cta">Shop on Instagram →</span>
+        </div>
+        <div class="product-info">
+          <div class="product-info-top">
+            <span class="product-name">The Shamse Teal</span>
+            <span class="product-price">$285</span>
           </div>
-          <div class="product-beads" aria-hidden="true">
-            <div class="p-bead" style="background:#1D9E8F"></div>
-            <div class="p-bead" style="background:#C9A84C"></div>
-            <div class="p-bead" style="background:#9B7FCC"></div>
-            <div class="p-bead" style="background:#C9846A"></div>
-            <div class="p-bead" style="background:#2E8B6A"></div>
+          <p class="product-desc">Turquoise tatreez · millefiori bead strap · gold clasp</p>
+          <div class="size-selector" data-product="1">
+            <div class="size-label">
+              <span>Size</span>
+              <a href="#" class="size-guide-link" onclick="return false">Size guide</a>
+            </div>
+            <div class="size-pills">
+              <button class="size-pill" data-size="XS">XS</button>
+              <button class="size-pill" data-size="S">S</button>
+              <button class="size-pill" data-size="M">M</button>
+              <button class="size-pill" data-size="L">L</button>
+              <button class="size-pill out-of-stock" data-size="XL" disabled>XL</button>
+            </div>
           </div>
-        </a>
+          <button class="btn-cart" data-product-id="1" data-name="The Shamse Teal" data-price="285" data-color="#0D9E8F">Add to Cart</button>
+        </div>
       </article>
 
-      <article class="product-card">
-        <span class="bead-tag" style="background:#C9A84C" aria-hidden="true"></span>
-        <a href="https://www.instagram.com/shamse_swim/" target="_blank" rel="noopener" class="product-link">
-          <div class="product-img-wrap">
-            <img src="images/product-black.jpg" alt="Black and gold tatreez swimsuit" loading="lazy" />
-            <svg class="product-shamse" viewBox="0 0 120 120" aria-hidden="true"><use href="#shamse-12"/></svg>
+      <!-- Product 2 -->
+      <article class="product-card" data-product-id="2">
+        <div class="product-img-wrap">
+          <span class="bead-tag" style="background:#C9A84C" aria-hidden="true"></span>
+          <div class="ph ph-midnight">
+            <svg class="ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <p class="ph-label">[ The Midnight Gold — black tatreez swimsuit with gold embroidery and turquoise bead strap, moody low-key studio lighting ]</p>
           </div>
-          <div class="product-info">
-            <h3>The Midnight Gold</h3>
-            <p>Black canvas · gold tatreez · turquoise bead strap</p>
-            <span class="product-cta">Shop on Instagram →</span>
+        </div>
+        <div class="product-info">
+          <div class="product-info-top">
+            <span class="product-name">The Midnight Gold</span>
+            <span class="product-price">$310</span>
           </div>
-          <div class="product-beads" aria-hidden="true">
-            <div class="p-bead" style="background:#C9A84C"></div>
-            <div class="p-bead" style="background:#1D9E8F"></div>
-            <div class="p-bead" style="background:#D4820A"></div>
-            <div class="p-bead" style="background:#C9846A"></div>
-            <div class="p-bead" style="background:#2A5FAC"></div>
+          <p class="product-desc">Black canvas · gold tatreez · turquoise bead strap</p>
+          <div class="size-selector" data-product="2">
+            <div class="size-label">
+              <span>Size</span>
+              <a href="#" class="size-guide-link" onclick="return false">Size guide</a>
+            </div>
+            <div class="size-pills">
+              <button class="size-pill out-of-stock" data-size="XS" disabled>XS</button>
+              <button class="size-pill" data-size="S">S</button>
+              <button class="size-pill" data-size="M">M</button>
+              <button class="size-pill" data-size="L">L</button>
+              <button class="size-pill" data-size="XL">XL</button>
+            </div>
           </div>
-        </a>
+          <button class="btn-cart" data-product-id="2" data-name="The Midnight Gold" data-price="310" data-color="#C9A84C">Add to Cart</button>
+        </div>
       </article>
 
-      <article class="product-card">
-        <span class="bead-tag" style="background:#E05A3A" aria-hidden="true"></span>
-        <a href="https://www.instagram.com/shamse_swim/" target="_blank" rel="noopener" class="product-link">
-          <div class="product-img-wrap">
-            <img src="images/product-red.jpg" alt="Red tatreez bikini with gold body chain" loading="lazy" />
-            <svg class="product-shamse" viewBox="0 0 120 120" aria-hidden="true"><use href="#shamse-12"/></svg>
+      <!-- Product 3 -->
+      <article class="product-card" data-product-id="3">
+        <div class="product-img-wrap">
+          <span class="bead-tag" style="background:#E0522A" aria-hidden="true"></span>
+          <div class="ph ph-crimson">
+            <svg class="ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <p class="ph-label">[ The Crimson Chain — red tatreez bikini with gold sun body chain, warm golden light, Mediterranean setting ]</p>
           </div>
-          <div class="product-info">
-            <h3>The Crimson Chain</h3>
-            <p>Red tatreez · gold sun body chain</p>
-            <span class="product-cta">Shop on Instagram →</span>
+        </div>
+        <div class="product-info">
+          <div class="product-info-top">
+            <span class="product-name">The Crimson Chain</span>
+            <span class="product-price">$295</span>
           </div>
-          <div class="product-beads" aria-hidden="true">
-            <div class="p-bead" style="background:#E05A3A"></div>
-            <div class="p-bead" style="background:#C9A84C"></div>
-            <div class="p-bead" style="background:#C9846A"></div>
-            <div class="p-bead" style="background:#D4820A"></div>
-            <div class="p-bead" style="background:#9B7FCC"></div>
+          <p class="product-desc">Red tatreez · gold sun body chain · coral beads</p>
+          <div class="size-selector" data-product="3">
+            <div class="size-label">
+              <span>Size</span>
+              <a href="#" class="size-guide-link" onclick="return false">Size guide</a>
+            </div>
+            <div class="size-pills">
+              <button class="size-pill" data-size="XS">XS</button>
+              <button class="size-pill" data-size="S">S</button>
+              <button class="size-pill" data-size="M">M</button>
+              <button class="size-pill" data-size="L">L</button>
+              <button class="size-pill" data-size="XL">XL</button>
+            </div>
           </div>
-        </a>
+          <button class="btn-cart" data-product-id="3" data-name="The Crimson Chain" data-price="295" data-color="#E0522A">Add to Cart</button>
+        </div>
       </article>
 
-      <article class="product-card">
-        <span class="bead-tag" style="background:#9B7FCC" aria-hidden="true"></span>
-        <a href="https://www.instagram.com/shamse_swim/" target="_blank" rel="noopener" class="product-link">
-          <div class="product-img-wrap">
-            <img src="images/purple-sun.jpg" alt="Purple tatreez top with sun charms" loading="lazy" />
-            <svg class="product-shamse" viewBox="0 0 120 120" aria-hidden="true"><use href="#shamse-12"/></svg>
+      <!-- Product 4 -->
+      <article class="product-card" data-product-id="4">
+        <div class="product-img-wrap">
+          <span class="bead-tag" style="background:#8E70C6" aria-hidden="true"></span>
+          <div class="ph ph-violet">
+            <svg class="ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <p class="ph-label">[ The Violet Sun — purple tatreez top with gold bead strap and sun charms, hazy natural afternoon light ]</p>
           </div>
-          <div class="product-info">
-            <h3>The Violet Sun</h3>
-            <p>Purple tatreez · gold bead strap · sun charms</p>
-            <span class="product-cta">Shop on Instagram →</span>
+        </div>
+        <div class="product-info">
+          <div class="product-info-top">
+            <span class="product-name">The Violet Sun</span>
+            <span class="product-price">$275</span>
           </div>
-          <div class="product-beads" aria-hidden="true">
-            <div class="p-bead" style="background:#9B7FCC"></div>
-            <div class="p-bead" style="background:#C9A84C"></div>
-            <div class="p-bead" style="background:#C9846A"></div>
-            <div class="p-bead" style="background:#2A5FAC"></div>
-            <div class="p-bead" style="background:#E05A3A"></div>
+          <p class="product-desc">Purple tatreez · gold bead strap · sun charms</p>
+          <div class="size-selector" data-product="4">
+            <div class="size-label">
+              <span>Size</span>
+              <a href="#" class="size-guide-link" onclick="return false">Size guide</a>
+            </div>
+            <div class="size-pills">
+              <button class="size-pill" data-size="XS">XS</button>
+              <button class="size-pill" data-size="S">S</button>
+              <button class="size-pill" data-size="M">M</button>
+              <button class="size-pill out-of-stock" data-size="L" disabled>L</button>
+              <button class="size-pill out-of-stock" data-size="XL" disabled>XL</button>
+            </div>
           </div>
-        </a>
+          <button class="btn-cart" data-product-id="4" data-name="The Violet Sun" data-price="275" data-color="#8E70C6">Add to Cart</button>
+        </div>
       </article>
 
     </div>
@@ -308,51 +369,9 @@
 
   <div class="tatreez-divider" aria-hidden="true"></div>
 
-  <!-- ── Section 6: Bead Straps Showcase ── -->
-  <section id="beads" class="reveal-section bead-showcase">
-    <div class="bead-text">
-      <p class="bead-eyebrow">Handmade in Palestine</p>
-      <h2>The Bead Straps</h2>
-      <div class="bead-string-deco" aria-hidden="true">
-        <div class="ds-bead" style="background:#1D9E8F"></div>
-        <div class="ds-bead" style="background:#C9A84C"></div>
-        <div class="ds-bead" style="background:#9B7FCC"></div>
-        <div class="ds-bead" style="background:#C9846A"></div>
-        <div class="ds-bead" style="background:#E05A3A"></div>
-        <div class="ds-bead" style="background:#2A5FAC"></div>
-        <div class="ds-bead" style="background:#2E8B6A"></div>
-        <div class="ds-bead" style="background:#D4820A"></div>
-        <div class="ds-bead" style="background:#9B7FCC"></div>
-        <div class="ds-bead" style="background:#C9A84C"></div>
-        <div class="ds-bead" style="background:#1D9E8F"></div>
-        <div class="ds-bead" style="background:#E05A3A"></div>
-      </div>
-      <p>Each strap is hand-strung with millefiori glass beads, turquoise stones, and gemstones sourced from across the Mediterranean. No two straps are exactly alike.</p>
-      <a href="https://www.instagram.com/shamse_swim/" target="_blank" rel="noopener" class="btn-outline">Shop Straps</a>
-    </div>
-    <div class="bead-images">
-      <div class="bead-img-item">
-        <img src="images/beads.jpg" alt="Colourful gemstone bead strands" loading="lazy" />
-      </div>
-      <div class="bead-img-item">
-        <img src="images/purple-beads.jpg" alt="Purple bikini with millefiori bead strap" loading="lazy" />
-      </div>
-    </div>
-  </section>
-
-  <!-- ── Section 7: Full-bleed accessories ── -->
-  <section id="accessories" class="reveal-section full-bleed-section">
-    <div class="full-bleed-img">
-      <img src="images/purple-beads.jpg" alt="Purple beach editorial with gemstone jewellery" loading="lazy" />
-      <div class="full-bleed-overlay">
-        <h2>Colourful as the sea</h2>
-      </div>
-    </div>
-  </section>
-
-  <div class="tatreez-divider" aria-hidden="true"></div>
-
-  <!-- ── Section 8: Instagram CTA ── -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- ── SOCIALS ── -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <section id="instagram" class="reveal-section insta-section">
     <div class="insta-bg-stars" aria-hidden="true">
       <svg class="bg-star b1" viewBox="0 0 120 120"><use href="#shamse-12"/></svg>
@@ -364,7 +383,9 @@
     <div class="insta-content">
       <svg class="insta-star" viewBox="0 0 120 120" aria-hidden="true"><use href="#shamse-12"/></svg>
       <h2>Find us in the sun</h2>
+      <p>New drops, behind the scenes, and sun-drenched editorials.</p>
       <a href="https://www.instagram.com/shamse_swim/" target="_blank" rel="noopener" class="btn-insta">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
         @shamse_swim
       </a>
     </div>
@@ -374,26 +395,24 @@
   <footer id="footer">
     <div class="footer-tatreez-top" aria-hidden="true"></div>
     <div class="footer-bead-row" aria-hidden="true">
-      <div class="fb" style="background:#1D9E8F"></div>
+      <div class="fb" style="background:#0D9E8F"></div>
       <div class="fb" style="background:#C9A84C"></div>
-      <div class="fb" style="background:#9B7FCC"></div>
-      <div class="fb" style="background:#C9846A"></div>
-      <div class="fb" style="background:#E05A3A"></div>
-      <div class="fb" style="background:#2A5FAC"></div>
-      <div class="fb" style="background:#2E8B6A"></div>
-      <div class="fb" style="background:#D4820A"></div>
-      <div class="fb" style="background:#9B7FCC"></div>
+      <div class="fb" style="background:#8E70C6"></div>
+      <div class="fb" style="background:#CC6E82"></div>
+      <div class="fb" style="background:#E0522A"></div>
+      <div class="fb" style="background:#2455A6"></div>
+      <div class="fb" style="background:#1A8C6A"></div>
+      <div class="fb" style="background:#D47A0A"></div>
+      <div class="fb" style="background:#8E70C6"></div>
       <div class="fb" style="background:#C9A84C"></div>
-      <div class="fb" style="background:#1D9E8F"></div>
-      <div class="fb" style="background:#E05A3A"></div>
-      <div class="fb" style="background:#C9846A"></div>
+      <div class="fb" style="background:#0D9E8F"></div>
+      <div class="fb" style="background:#E0522A"></div>
+      <div class="fb" style="background:#CC6E82"></div>
       <div class="fb" style="background:#C9A84C"></div>
-      <div class="fb" style="background:#2A5FAC"></div>
-      <div class="fb" style="background:#9B7FCC"></div>
-      <div class="fb" style="background:#2E8B6A"></div>
-      <div class="fb" style="background:#D4820A"></div>
-      <div class="fb" style="background:#C9A84C"></div>
-      <div class="fb" style="background:#1D9E8F"></div>
+      <div class="fb" style="background:#2455A6"></div>
+      <div class="fb" style="background:#8E70C6"></div>
+      <div class="fb" style="background:#1A8C6A"></div>
+      <div class="fb" style="background:#D47A0A"></div>
     </div>
     <div class="footer-inner">
       <div class="footer-brand">
@@ -401,9 +420,8 @@
         <span class="footer-name">Shamse Swim</span>
       </div>
       <nav class="footer-nav" aria-label="Footer navigation">
-        <a href="#gallery">Collection</a>
+        <a href="#story">Story</a>
         <a href="#shop">Shop</a>
-        <a href="#beads">Beads</a>
         <a href="https://www.instagram.com/shamse_swim/" target="_blank" rel="noopener">Instagram</a>
       </nav>
       <p class="footer-copy">شمسة — Sun-kissed swimwear. Palestinian soul.</p>
