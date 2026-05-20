@@ -72,12 +72,14 @@ if (!isMobile && cursorDot && cursorCanvas) {
   }
 
   let frameCount = 0;
+  let isMoving   = false;
+  let moveTimer  = null;
 
   function animateCursor() {
     cCtx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
     frameCount++;
 
-    if (frameCount % 3 === 0 && particles.length < MAX_PARTICLES) {
+    if (isMoving && frameCount % 3 === 0 && particles.length < MAX_PARTICLES) {
       particles.push(new Particle(mouseX, mouseY));
     }
 
@@ -98,6 +100,9 @@ if (!isMobile && cursorDot && cursorCanvas) {
     cursorDot.style.left    = mouseX + 'px';
     cursorDot.style.top     = mouseY + 'px';
     cursorDot.style.opacity = '1';
+    isMoving = true;
+    clearTimeout(moveTimer);
+    moveTimer = setTimeout(() => { isMoving = false; }, 80);
   });
 
   document.addEventListener('mouseleave', () => { cursorDot.style.opacity = '0'; });
@@ -294,36 +299,50 @@ window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 60);
 }, { passive: true });
 
-// ── Mouse parallax on hero logo ────────────────────────────────────────────
-const heroLogo = document.getElementById('hero-logo');
-const hero     = document.getElementById('hero');
-
-if (hero && heroLogo) {
-  hero.addEventListener('mousemove', (e) => {
-    const rect = hero.getBoundingClientRect();
-    const dx   = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2);
-    const dy   = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2);
-    heroLogo.style.transform = `translate(${dx * 14}px, ${dy * 9}px)`;
-  }, { passive: true });
-
-  hero.addEventListener('mouseleave', () => {
-    heroLogo.style.transform = '';
-  });
-}
-
-// ── Hero tatreez parallax ──────────────────────────────────────────────────
+// ── Hero background mouse + scroll parallax ────────────────────────────────
+const hero          = document.getElementById('hero');
 const heroTatreezBg = document.querySelector('.hero-tatreez-bg');
 const heroCanvas    = document.getElementById('tatreez-canvas');
 const floatingStars = document.querySelector('.floating-stars');
 const heroContent   = document.querySelector('.hero-content');
 const scrollHint    = document.querySelector('.scroll-hint');
 
+let tatreezScrollY = 0;
+let bgMouseX = 0, bgMouseY = 0;
+
+function applyTatreezTransform() {
+  if (heroTatreezBg) {
+    heroTatreezBg.style.transform = `translateY(${tatreezScrollY}px) translate(${bgMouseX}px, ${bgMouseY}px)`;
+  }
+}
+
+if (hero) {
+  hero.addEventListener('mousemove', (e) => {
+    const rect = hero.getBoundingClientRect();
+    const dx   = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2);
+    const dy   = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2);
+    bgMouseX = dx * -14;
+    bgMouseY = dy * -9;
+    applyTatreezTransform();
+    if (heroCanvas)    heroCanvas.style.transform    = `translate(${dx * -9}px, ${dy * -6}px)`;
+    if (floatingStars) floatingStars.style.transform = `translate(${dx * 18}px, ${dy * 12}px)`;
+  }, { passive: true });
+
+  hero.addEventListener('mouseleave', () => {
+    bgMouseX = 0; bgMouseY = 0;
+    applyTatreezTransform();
+    if (heroCanvas)    heroCanvas.style.transform    = '';
+    if (floatingStars) floatingStars.style.transform = '';
+  });
+}
+
 window.addEventListener('scroll', () => {
   const s       = window.scrollY;
   const maxFade = window.innerHeight * 0.72;
   const opacity = Math.max(0, 1 - s / maxFade);
 
-  if (heroTatreezBg) heroTatreezBg.style.transform = `translateY(${s * 0.3}px)`;
+  tatreezScrollY = s * 0.3;
+  applyTatreezTransform();
   if (heroCanvas)    heroCanvas.style.opacity    = opacity * 0.18;
   if (floatingStars) floatingStars.style.opacity = opacity;
   if (heroContent)   heroContent.style.opacity   = opacity;
