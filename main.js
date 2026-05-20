@@ -374,7 +374,7 @@ function initTatreezCanvas(canvasId) {
   window.addEventListener('resize', resize, { passive: true });
 
   const colours = [
-    'rgba(201,168,76,1)',
+    'rgba(255,232,124,1)',
     'rgba(13,158,143,1)',
     'rgba(142,112,198,1)',
     'rgba(204,110,130,1)',
@@ -399,16 +399,33 @@ function initTatreezCanvas(canvasId) {
     ctx.save();
     ctx.globalAlpha = alpha;
     ctx.fillStyle   = color;
-    ctx.beginPath();
+    // 16 wavy rays matching the new organic sun design
+    const rInner = r * 0.38;
+    const rOuter = r;
+    const dx     = r * 0.11;
     for (let i = 0; i < 16; i++) {
-      const angle  = (Math.PI * i / 8) - Math.PI / 2;
-      const radius = (i % 2 === 0) ? r : r * 0.42;
-      const px     = x + radius * Math.cos(angle);
-      const py     = y + radius * Math.sin(angle);
-      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      const angle = (Math.PI * 2 * i / 16) - Math.PI / 2;
+      const cos   = Math.cos(angle);
+      const sin   = Math.sin(angle);
+      // rotate base points and control points around center
+      function pt(dr, dt) {
+        const a = angle + dt;
+        return [x + dr * Math.cos(a), y + dr * Math.sin(a)];
+      }
+      const [bx1, by1] = pt(rInner, 0.12);
+      const [bx2, by2] = pt(rInner, -0.12);
+      const [tx,  ty]  = [x + rOuter * cos, y + rOuter * sin];
+      const [c1x, c1y] = pt(rInner * 1.6, 0.18);
+      const [c2x, c2y] = pt(rOuter * 0.75, 0.06);
+      const [c3x, c3y] = pt(rOuter * 0.75, -0.06);
+      const [c4x, c4y] = pt(rInner * 1.6, -0.18);
+      ctx.beginPath();
+      ctx.moveTo(bx1, by1);
+      ctx.bezierCurveTo(c1x, c1y, c2x, c2y, tx, ty);
+      ctx.bezierCurveTo(c3x, c3y, c4x, c4y, bx2, by2);
+      ctx.closePath();
+      ctx.fill();
     }
-    ctx.closePath();
-    ctx.fill();
     ctx.restore();
   }
 
