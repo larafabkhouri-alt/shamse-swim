@@ -2,29 +2,57 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
+  /* Brand colours */
+  --cream:        #FDF6EC;
+  --terracotta:   #C1440E;
+  --terracotta-dk:#3D1A0A;
+  --turquoise:    #1D9E8F;
+  --lavender:     #9B7FCC;
+  --rose:         #C9846A;
+  --gold:         #C9A84C;
+  --gold-light:   #E8C96A;
+  --lapis:        #2A5FAC;
+  --emerald:      #2E8B6A;
+  --amber:        #D4820A;
+  --coral:        #E05A3A;
+
+  /* Legacy aliases kept for any remnant usage */
   --peach:   #EDD5B5;
-  --gold:    #D4A535;
-  --gold-l:  #F0C864;
-  --teal:    #2DBFBF;
-  --purple:  #8250AA;
-  --crimson: #B03030;
-  --sage:    #7A9E6A;
   --dark:    #1E1A2E;
   --tan:     #C8A882;
   --tan-dark:#3A2D1E;
   --white:   #FFFFFF;
-  --font-display: 'Abril Fatface', serif;
+
+  /* Jewel bead palette (used for bead elements) */
+  --bead-1: #1D9E8F;
+  --bead-2: #C9846A;
+  --bead-3: #9B7FCC;
+  --bead-4: #C9A84C;
+  --bead-5: #E05A3A;
+  --bead-6: #2A5FAC;
+  --bead-7: #2E8B6A;
+  --bead-8: #D4820A;
+
+  /* Typography */
+  --font-display: 'Amiri', 'Scheherazade New', serif;
   --font-head:    'Fraunces', serif;
   --font-body:    'DM Sans', sans-serif;
+
+  /* Tatreez SVG pattern as data URI (inline, no external file) */
+  --tatreez-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect width='80' height='80' fill='none'/%3E%3Cg stroke='%23C9A84C' stroke-width='1.2' fill='none' opacity='0.55'%3E%3Cpolygon points='40,8 43,20 52,12 47,23 60,20 51,28 60,36 48,34 52,46 42,40 40,52 38,40 28,46 32,34 20,36 29,28 20,20 33,23 28,12 37,20'/%3E%3Cpath d='M8 40 L20 36 L20 44 Z M72 40 L60 36 L60 44 Z M40 8 L36 20 L44 20 Z M40 72 L36 60 L44 60 Z'/%3E%3Crect x='32' y='32' width='16' height='16' transform='rotate(45 40 40)'/%3E%3Cline x1='0' y1='0' x2='10' y2='10'/%3E%3Cline x1='70' y1='0' x2='80' y2='10'/%3E%3Cline x1='0' y1='70' x2='10' y2='80'/%3E%3Cline x1='70' y1='70' x2='80' y2='80'/%3E%3C/g%3E%3C/svg%3E");
+
+  /* Tatreez border: repeating diamond/zigzag strip */
+  --tatreez-border-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20'%3E%3Cg fill='none' stroke='%23C9A84C' stroke-width='1.5'%3E%3Cpolyline points='0,10 10,2 20,10 30,2 40,10'/%3E%3Cpolyline points='0,10 10,18 20,10 30,18 40,10'/%3E%3Ccircle cx='10' cy='2' r='2' fill='%23C9A84C'/%3E%3Ccircle cx='30' cy='2' r='2' fill='%239B7FCC'/%3E%3Ccircle cx='20' cy='10' r='2' fill='%231D9E8F'/%3E%3Ccircle cx='10' cy='18' r='2' fill='%23C9846A'/%3E%3Ccircle cx='30' cy='18' r='2' fill='%23E05A3A'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-body);
-  background: #f9f0e4;
+  background: var(--cream);
   color: var(--tan-dark);
   overflow-x: hidden;
+  cursor: none; /* custom cursor active */
 }
 
 img {
@@ -36,6 +64,107 @@ img {
 
 a { text-decoration: none; color: inherit; }
 
+/* ── Custom golden-sun cursor ────────────────────────────────────────────── */
+#cursor-dot {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease;
+}
+
+#cursor-dot svg { width: 100%; height: 100%; }
+
+#cursor-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99998;
+}
+
+/* ── Loading Screen ──────────────────────────────────────────────────────── */
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99990;
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+#loading-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loading-medallion {
+  width: 120px;
+  height: 120px;
+}
+
+.loading-medallion circle,
+.loading-medallion polygon {
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  animation: drawMedallion 1.4s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+
+.loading-medallion polygon {
+  animation-delay: 0.2s;
+}
+
+@keyframes drawMedallion {
+  to { stroke-dashoffset: 0; }
+}
+
+.loading-beads {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.loading-bead {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  animation: beadDrop 0.6s ease forwards;
+  opacity: 0;
+  transform: translateY(-30px);
+  box-shadow: inset -2px -2px 4px rgba(0,0,0,0.25), inset 2px 2px 4px rgba(255,255,255,0.3);
+}
+
+.loading-bead:nth-child(1) { background: var(--bead-1); animation-delay: 0.6s; }
+.loading-bead:nth-child(2) { background: var(--bead-2); animation-delay: 0.7s; }
+.loading-bead:nth-child(3) { background: var(--bead-3); animation-delay: 0.8s; }
+.loading-bead:nth-child(4) { background: var(--bead-4); animation-delay: 0.9s; }
+.loading-bead:nth-child(5) { background: var(--bead-5); animation-delay: 1.0s; }
+.loading-bead:nth-child(6) { background: var(--bead-6); animation-delay: 1.1s; }
+.loading-bead:nth-child(7) { background: var(--bead-7); animation-delay: 1.2s; }
+
+@keyframes beadDrop {
+  0%   { opacity: 0; transform: translateY(-30px) scale(0.6); }
+  70%  { opacity: 1; transform: translateY(4px) scale(1.1); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Tatreez section divider ─────────────────────────────────────────────── */
+.tatreez-divider {
+  width: 100%;
+  height: 20px;
+  background-image: var(--tatreez-border-svg);
+  background-repeat: repeat-x;
+  background-size: 40px 20px;
+  opacity: 0.7;
+  margin: 0;
+}
+
 /* ── Nav ─────────────────────────────────────────────────────────────────── */
 #nav {
   position: fixed;
@@ -46,10 +175,10 @@ a { text-decoration: none; color: inherit; }
 }
 
 #nav.scrolled {
-  background: rgba(237, 213, 181, 0.75);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 2px 20px rgba(58,45,30,0.12);
+  background: rgba(253, 246, 236, 0.82);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 2px 24px rgba(61,26,10,0.1);
 }
 
 .nav-inner {
@@ -63,38 +192,77 @@ a { text-decoration: none; color: inherit; }
 .nav-logo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   font-family: var(--font-display);
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   color: var(--white);
-  text-shadow: 0 1px 8px rgba(0,0,0,0.25);
+  text-shadow: 0 1px 8px rgba(0,0,0,0.3);
 }
 
-#nav.scrolled .nav-logo { color: var(--tan-dark); text-shadow: none; }
+#nav.scrolled .nav-logo { color: var(--terracotta-dk); text-shadow: none; }
 
 .nav-sun {
   width: 28px; height: 28px;
   color: var(--gold);
+  animation: spinSlow 60s linear infinite;
+  transform-origin: center;
 }
 
 .nav-links {
   list-style: none;
   display: flex;
-  gap: 2.2rem;
+  align-items: center;
+  gap: 0.4rem;
 }
 
+.nav-links li { display: flex; align-items: center; }
+
+/* Bead-dot separator between nav items */
+.nav-links li + li::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 0.4rem;
+  box-shadow: inset -1px -1px 2px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+}
+
+.nav-links li:nth-child(2)::before { background: var(--bead-1); }
+.nav-links li:nth-child(3)::before { background: var(--bead-3); }
+.nav-links li:nth-child(4)::before { background: var(--bead-5); }
+
 .nav-links a {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--white);
   opacity: 0.9;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, color 0.2s;
+  padding: 0.2rem 0.5rem;
 }
 
-#nav.scrolled .nav-links a { color: var(--tan-dark); }
-.nav-links a:hover { opacity: 1; }
+#nav.scrolled .nav-links a { color: var(--terracotta-dk); }
+.nav-links a:hover { opacity: 1; color: var(--gold) !important; }
+
+/* Mobile hamburger → tatreez star */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: none;
+  padding: 0.3rem;
+  width: 36px;
+  height: 36px;
+  color: var(--white);
+  transition: transform 0.4s ease;
+}
+
+#nav.scrolled .nav-toggle { color: var(--terracotta-dk); }
+.nav-toggle.open { transform: rotate(30deg); }
+.nav-toggle svg { width: 100%; height: 100%; }
 
 /* ── Hero ────────────────────────────────────────────────────────────────── */
 #hero {
@@ -102,7 +270,7 @@ a { text-decoration: none; color: inherit; }
   width: 100%;
   height: 100vh;
   min-height: 600px;
-  background: var(--peach);
+  background: var(--cream);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -115,7 +283,19 @@ a { text-decoration: none; color: inherit; }
   width: 100%;
   height: 100%;
   pointer-events: none;
-  opacity: 0.7;
+  opacity: 0.05; /* subtle watermark */
+}
+
+/* Tatreez watermark layer (separate from canvas) */
+.hero-tatreez-bg {
+  position: absolute;
+  inset: 0;
+  background-image: var(--tatreez-svg);
+  background-repeat: repeat;
+  background-size: 80px 80px;
+  opacity: 0.04;
+  pointer-events: none;
+  will-change: transform;
 }
 
 .floating-stars {
@@ -131,18 +311,18 @@ a { text-decoration: none; color: inherit; }
   animation: floatDrift 18s ease-in-out infinite;
 }
 
-.float-star.s1 { width: 48px; top: 12%; left: 8%;  animation-delay: 0s;    animation-duration: 20s; }
-.float-star.s2 { width: 30px; top: 65%; left: 15%; animation-delay: 3s;    animation-duration: 16s; }
-.float-star.s3 { width: 60px; top: 20%; right: 10%;animation-delay: 6s;    animation-duration: 22s; }
-.float-star.s4 { width: 36px; top: 75%; right: 18%;animation-delay: 9s;    animation-duration: 18s; }
-.float-star.s5 { width: 24px; top: 45%; left: 5%;  animation-delay: 12s;   animation-duration: 14s; }
-.float-star.s6 { width: 42px; top: 50%; right: 5%; animation-delay: 2s;    animation-duration: 24s; }
+.float-star.s1 { width: 48px; top: 12%; left: 8%;   animation-delay: 0s;   animation-duration: 20s; }
+.float-star.s2 { width: 30px; top: 65%; left: 15%;  animation-delay: 3s;   animation-duration: 16s; }
+.float-star.s3 { width: 60px; top: 20%; right: 10%; animation-delay: 6s;   animation-duration: 22s; }
+.float-star.s4 { width: 36px; top: 75%; right: 18%; animation-delay: 9s;   animation-duration: 18s; }
+.float-star.s5 { width: 24px; top: 45%; left: 5%;   animation-delay: 12s;  animation-duration: 14s; }
+.float-star.s6 { width: 42px; top: 50%; right: 5%;  animation-delay: 2s;   animation-duration: 24s; }
 
 @keyframes floatDrift {
   0%   { opacity: 0; transform: translateY(30px) rotate(0deg); }
-  15%  { opacity: 0.55; }
+  15%  { opacity: 0.5; }
   50%  { transform: translateY(-20px) rotate(180deg); }
-  85%  { opacity: 0.45; }
+  85%  { opacity: 0.4; }
   100% { opacity: 0; transform: translateY(30px) rotate(360deg); }
 }
 
@@ -162,10 +342,10 @@ a { text-decoration: none; color: inherit; }
 .logo-text {
   font-family: var(--font-display);
   font-size: clamp(5rem, 14vw, 11rem);
-  color: var(--white);
+  color: var(--terracotta-dk);
   line-height: 1;
-  text-shadow: 0 4px 30px rgba(58,45,30,0.2);
   letter-spacing: -0.01em;
+  text-shadow: 0 4px 30px rgba(193,68,14,0.15);
 }
 
 .logo-sun-badge {
@@ -174,13 +354,8 @@ a { text-decoration: none; color: inherit; }
   left: -0.25em;
   width: clamp(60px, 8vw, 110px);
   height: auto;
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
-  animation: badgePulse 4s ease-in-out infinite;
-}
-
-@keyframes badgePulse {
-  0%, 100% { transform: scale(1) rotate(0deg); }
-  50%       { transform: scale(1.06) rotate(15deg); }
+  filter: drop-shadow(0 2px 10px rgba(201,168,76,0.5));
+  animation: spinSlow 60s linear infinite;
 }
 
 .logo-dash {
@@ -194,15 +369,92 @@ a { text-decoration: none; color: inherit; }
 }
 
 .hero-tagline {
-  margin-top: 1.4rem;
+  margin-top: 1.6rem;
   font-family: var(--font-head);
   font-style: italic;
   font-weight: 300;
   font-size: clamp(1rem, 2.2vw, 1.4rem);
-  color: var(--white);
+  color: var(--terracotta);
   letter-spacing: 0.04em;
-  opacity: 0.9;
-  text-shadow: 0 2px 12px rgba(58,45,30,0.15);
+  opacity: 0.88;
+}
+
+/* CTA button in hero */
+.hero-cta {
+  display: inline-block;
+  margin-top: 2.2rem;
+  padding: 0.9rem 2.8rem;
+  background: var(--terracotta);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 50px;
+  border: 2px solid var(--gold);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s, transform 0.2s;
+  cursor: none;
+}
+
+.hero-cta:hover {
+  background: var(--terracotta-dk);
+  transform: scale(1.04);
+}
+
+/* Bead string across hero */
+.hero-bead-string {
+  position: absolute;
+  bottom: 18%;
+  left: 0;
+  right: 0;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.h-bead {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  opacity: 0;
+  transform: translateY(-60px);
+  animation: beadFall 0.7s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  box-shadow:
+    inset -3px -3px 6px rgba(0,0,0,0.3),
+    inset 3px 3px 6px rgba(255,255,255,0.35),
+    0 3px 8px rgba(0,0,0,0.18);
+}
+
+.h-bead.sm { width: 12px; height: 12px; }
+.h-bead.lg { width: 22px; height: 22px; }
+
+/* bead shimmer on hover — triggered by JS adding .shimmer class to parent */
+.hero-bead-string.shimmer .h-bead {
+  animation: beadShimmer 0.6s ease infinite alternate;
+}
+
+@keyframes beadFall {
+  0%   { opacity: 0; transform: translateY(-60px) scale(0.5); }
+  75%  { opacity: 1; transform: translateY(3px) scale(1.08); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes beadShimmer {
+  0%   { filter: brightness(1) saturate(1); }
+  100% { filter: brightness(1.35) saturate(1.6); }
+}
+
+@keyframes spinSlow {
+  to { transform: rotate(360deg); }
 }
 
 .scroll-hint {
@@ -217,7 +469,7 @@ a { text-decoration: none; color: inherit; }
   display: block;
   width: 22px;
   height: 36px;
-  border: 2px solid rgba(255,255,255,0.6);
+  border: 2px solid rgba(193,68,14,0.5);
   border-radius: 12px;
   position: relative;
 }
@@ -227,7 +479,7 @@ a { text-decoration: none; color: inherit; }
   display: block;
   width: 4px;
   height: 8px;
-  background: rgba(255,255,255,0.8);
+  background: var(--terracotta);
   border-radius: 2px;
   position: absolute;
   top: 5px;
@@ -244,11 +496,50 @@ a { text-decoration: none; color: inherit; }
 /* ── Scroll reveal ───────────────────────────────────────────────────────── */
 .reveal-section {
   opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1),
-              transform 0.8s cubic-bezier(0.22,1,0.36,1);
+  transform: translateY(44px);
+  transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1),
+              transform 0.9s cubic-bezier(0.22,1,0.36,1);
 }
+
 .reveal-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered card entrance */
+.shop-grid .product-card {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1),
+              transform 0.7s cubic-bezier(0.22,1,0.36,1),
+              box-shadow 0.35s ease;
+}
+
+.shop-grid .product-card.card-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Section heading bead drop */
+.section-header h2 {
+  position: relative;
+}
+
+.section-header h2::before {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  margin: 0 auto 0.8rem;
+  opacity: 0;
+  transform: translateY(-20px);
+  box-shadow: inset -1px -1px 3px rgba(0,0,0,0.2);
+  transition: opacity 0.5s ease 0.2s, transform 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.2s;
+}
+
+.reveal-section.visible .section-header h2::before {
   opacity: 1;
   transform: translateY(0);
 }
@@ -262,24 +553,21 @@ a { text-decoration: none; color: inherit; }
 }
 
 .section-header h2 {
-  font-family: var(--font-head);
+  font-family: var(--font-display);
   font-size: clamp(2rem, 4vw, 3.2rem);
   font-weight: 400;
-  color: var(--tan-dark);
+  color: var(--terracotta-dk);
 }
 
 .section-sub {
   margin-top: 0.6rem;
   font-size: 1rem;
-  color: var(--tan);
+  color: var(--rose);
   font-family: var(--font-body);
 }
 
 /* ── Letters Section ─────────────────────────────────────────────────────── */
-#letters {
-  position: relative;
-  overflow: hidden;
-}
+#letters { position: relative; overflow: hidden; }
 
 .letters-image-wrap {
   position: relative;
@@ -307,95 +595,50 @@ a { text-decoration: none; color: inherit; }
 
 .letters-sub {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 5vw, 4rem);
+  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
   color: var(--gold);
-  text-shadow: 0 2px 16px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 20px rgba(0,0,0,0.5);
   letter-spacing: 0.05em;
 }
 
 /* ── Gallery Grid ────────────────────────────────────────────────────────── */
+#gallery { background: var(--cream); }
+
 .gallery-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: 420px 380px;
+  grid-template-columns: 1.6fr 1fr;
   gap: 1rem;
 }
 
 .gallery-item {
   position: relative;
   overflow: hidden;
-  border-radius: 4px;
-  cursor: pointer;
+  border-radius: 6px;
+  cursor: none;
+  height: 400px;
 }
 
-.gallery-item.wide {
-  grid-column: 1;
-  grid-row: 1;
-}
-
-.gallery-item.tall {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-}
-
-.gallery-grid .gallery-item:nth-child(3) { grid-column: 1; grid-row: 2; }
-
-/* Last two items: bottom row three equal */
-.gallery-grid .gallery-item:nth-child(4),
-.gallery-grid .gallery-item:nth-child(5) {
-  grid-column: unset;
-  grid-row: unset;
-}
-
-.gallery-grid {
-  grid-template-areas:
-    "wide  tall"
-    "three four"
-    "five  four";
-}
-.gallery-item.wide   { grid-area: wide; }
-.gallery-item.tall   { grid-area: tall; }
-.gallery-grid .gallery-item:nth-child(3) { grid-area: three; }
-.gallery-grid .gallery-item:nth-child(4) { grid-area: four; grid-row: 2; grid-column: 1; }
-.gallery-grid .gallery-item:nth-child(5) { grid-area: unset; grid-column: 1; grid-row: 2 / span 2; }
-
-/* Simpler two-column layout */
-.gallery-grid {
-  display: grid;
-  grid-template-columns: 1.6fr 1fr;
-  grid-template-rows: auto;
-  gap: 1rem;
-}
-
-.gallery-item { height: 400px; }
 .gallery-item.wide { grid-column: 1; grid-row: 1; height: 440px; }
 .gallery-item.tall { grid-column: 2; grid-row: 1 / span 2; height: auto; min-height: 860px; }
 .gallery-grid .gallery-item:nth-child(3) { grid-column: 1; grid-row: 2; }
-.gallery-grid .gallery-item:nth-child(4) {
-  grid-column: 1; grid-row: 3;
-  height: 360px;
-}
-.gallery-grid .gallery-item:nth-child(5) {
-  grid-column: 2; grid-row: 3;
-  height: 360px;
-}
+.gallery-grid .gallery-item:nth-child(4) { grid-column: 1; grid-row: 3; height: 360px; }
+.gallery-grid .gallery-item:nth-child(5) { grid-column: 2; grid-row: 3; height: 360px; }
 
 .gallery-item img {
-  transition: transform 0.6s cubic-bezier(0.22,1,0.36,1),
-              filter 0.6s ease;
+  transition: transform 0.6s cubic-bezier(0.22,1,0.36,1), filter 0.6s ease;
 }
 
 .gallery-item:hover img {
   transform: scale(1.06);
-  filter: saturate(1.35);
+  filter: saturate(1.4) brightness(1.05);
 }
 
 .gallery-label {
   position: absolute;
   bottom: 1.2rem;
   left: 1.2rem;
-  background: rgba(30,26,46,0.72);
-  color: var(--white);
+  background: rgba(61,26,10,0.75);
+  color: var(--cream);
   font-size: 0.78rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -409,15 +652,10 @@ a { text-decoration: none; color: inherit; }
   transition: opacity 0.3s, transform 0.3s;
 }
 
-.gallery-item:hover .gallery-label {
-  opacity: 1;
-  transform: translateY(0);
-}
+.gallery-item:hover .gallery-label { opacity: 1; transform: translateY(0); }
 
 /* ── Tatreez Feature ─────────────────────────────────────────────────────── */
-.tatreez-feature {
-  padding: 0;
-}
+.tatreez-feature { padding: 0; }
 
 .tatreez-img-wrap {
   position: relative;
@@ -432,7 +670,7 @@ a { text-decoration: none; color: inherit; }
   height: 100%;
   object-fit: cover;
   object-position: center top;
-  filter: brightness(0.65);
+  filter: brightness(0.6);
 }
 
 .tatreez-overlay {
@@ -448,21 +686,14 @@ a { text-decoration: none; color: inherit; }
 .tatreez-spin-star {
   width: clamp(100px, 15vw, 200px);
   flex-shrink: 0;
-  animation: spinSlow 20s linear infinite;
-  filter: drop-shadow(0 0 20px rgba(212,165,53,0.6));
+  animation: spinSlow 60s linear infinite;
+  filter: drop-shadow(0 0 24px rgba(201,168,76,0.7));
 }
 
-@keyframes spinSlow {
-  to { transform: rotate(360deg); }
-}
-
-.tatreez-text {
-  max-width: 520px;
-  color: var(--white);
-}
+.tatreez-text { max-width: 520px; color: var(--white); }
 
 .tatreez-text h2 {
-  font-family: var(--font-head);
+  font-family: var(--font-display);
   font-size: clamp(1.8rem, 3.5vw, 3rem);
   font-weight: 400;
   margin-bottom: 1rem;
@@ -477,9 +708,7 @@ a { text-decoration: none; color: inherit; }
 }
 
 /* ── Shop Grid ───────────────────────────────────────────────────────────── */
-#shop { background: #fdf5eb; }
-#shop.section-pad { background: transparent; }
-#shop { padding: 6rem 2.5rem; background: #fdf5eb; }
+#shop { padding: 6rem 2.5rem; background: #FAF0E0; }
 
 .shop-grid {
   display: grid;
@@ -490,17 +719,61 @@ a { text-decoration: none; color: inherit; }
 }
 
 .product-card {
-  background: var(--white);
-  border-radius: 8px;
+  background: var(--cream);
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(58,45,30,0.08);
+  box-shadow: 0 4px 20px rgba(61,26,10,0.09);
+  position: relative;
   transition: transform 0.35s cubic-bezier(0.22,1,0.36,1),
               box-shadow 0.35s ease;
 }
 
 .product-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 12px 40px rgba(58,45,30,0.16);
+  box-shadow: 0 16px 48px rgba(61,26,10,0.18);
+}
+
+/* Tatreez corner motif */
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cg fill='none' stroke='%23C9A84C' stroke-width='1.2' opacity='0.7'%3E%3Cpolygon points='14,2 16,8 22,4 18,10 24,12 18,14 22,20 16,16 14,22 12,16 6,20 10,14 4,12 10,10 6,4 12,8'/%3E%3Ccircle cx='14' cy='14' r='3'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.7;
+  transition: opacity 0.3s, transform 0.4s;
+}
+
+.product-card:hover::before { opacity: 1; transform: rotate(22.5deg); }
+
+/* Bead color badge */
+.bead-tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 3;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-shadow:
+    inset -2px -2px 4px rgba(0,0,0,0.3),
+    inset 2px 2px 4px rgba(255,255,255,0.35),
+    0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* SVG bead-string border on hover (via outline + box-shadow trick) */
+.product-card:hover {
+  outline: none;
+  box-shadow:
+    0 16px 48px rgba(61,26,10,0.18),
+    0 0 0 3px var(--gold),
+    0 0 0 6px transparent;
 }
 
 .product-link { display: block; }
@@ -511,13 +784,8 @@ a { text-decoration: none; color: inherit; }
   overflow: hidden;
 }
 
-.product-img-wrap img {
-  transition: transform 0.5s ease;
-}
-
-.product-card:hover .product-img-wrap img {
-  transform: scale(1.05);
-}
+.product-img-wrap img { transition: transform 0.5s ease; }
+.product-card:hover .product-img-wrap img { transform: scale(1.05); }
 
 .product-shamse {
   position: absolute;
@@ -530,29 +798,24 @@ a { text-decoration: none; color: inherit; }
   transition: opacity 0.4s, transform 0.6s;
   transform: rotate(0deg);
   pointer-events: none;
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+  filter: drop-shadow(0 2px 10px rgba(0,0,0,0.35));
 }
 
-.product-card:hover .product-shamse {
-  opacity: 0.9;
-  transform: rotate(45deg);
-}
+.product-card:hover .product-shamse { opacity: 0.9; transform: rotate(22.5deg); }
 
-.product-info {
-  padding: 1.2rem 1.4rem 1.5rem;
-}
+.product-info { padding: 1.2rem 1.4rem 1.5rem; }
 
 .product-info h3 {
-  font-family: var(--font-head);
-  font-size: 1.05rem;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 400;
   margin-bottom: 0.35rem;
-  color: var(--tan-dark);
+  color: var(--terracotta-dk);
 }
 
 .product-info p {
   font-size: 0.82rem;
-  color: var(--tan);
+  color: var(--rose);
   margin-bottom: 0.8rem;
   line-height: 1.5;
 }
@@ -565,9 +828,40 @@ a { text-decoration: none; color: inherit; }
   color: var(--gold);
 }
 
+/* Bead shimmer on card hover */
+.product-card .product-beads {
+  display: flex;
+  gap: 4px;
+  padding: 0 1.4rem 1.2rem;
+  align-items: center;
+}
+
+.product-card .p-bead {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: inset -1px -1px 3px rgba(0,0,0,0.25), inset 1px 1px 3px rgba(255,255,255,0.3);
+  transition: filter 0.3s, transform 0.3s;
+}
+
+.product-card:hover .p-bead {
+  animation: beadRowShimmer 0.5s ease infinite alternate;
+}
+
+.product-card:hover .p-bead:nth-child(2) { animation-delay: 0.08s; }
+.product-card:hover .p-bead:nth-child(3) { animation-delay: 0.16s; }
+.product-card:hover .p-bead:nth-child(4) { animation-delay: 0.24s; }
+.product-card:hover .p-bead:nth-child(5) { animation-delay: 0.32s; }
+
+@keyframes beadRowShimmer {
+  0%   { filter: brightness(1) saturate(1); transform: scale(1); }
+  100% { filter: brightness(1.5) saturate(1.7); transform: scale(1.2); }
+}
+
 /* ── Bead Showcase ───────────────────────────────────────────────────────── */
 .bead-showcase {
-  background: var(--dark);
+  background: var(--terracotta-dk);
   display: grid;
   grid-template-columns: 1fr 1.4fr;
   min-height: 70vh;
@@ -591,7 +885,7 @@ a { text-decoration: none; color: inherit; }
 }
 
 .bead-text h2 {
-  font-family: var(--font-head);
+  font-family: var(--font-display);
   font-size: clamp(2rem, 3.5vw, 3rem);
   font-weight: 400;
   margin-bottom: 1.5rem;
@@ -600,10 +894,26 @@ a { text-decoration: none; color: inherit; }
 .bead-text p {
   font-size: 1rem;
   line-height: 1.8;
-  opacity: 0.78;
+  opacity: 0.8;
   max-width: 400px;
   margin-bottom: 2.5rem;
   font-weight: 300;
+}
+
+/* Decorative bead string in bead showcase */
+.bead-string-deco {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.bead-string-deco .ds-bead {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  box-shadow: inset -2px -2px 4px rgba(0,0,0,0.3), inset 2px 2px 4px rgba(255,255,255,0.25);
 }
 
 .btn-outline {
@@ -618,31 +928,17 @@ a { text-decoration: none; color: inherit; }
   font-weight: 500;
   transition: background 0.25s, color 0.25s;
   align-self: flex-start;
+  cursor: none;
 }
 
-.btn-outline:hover {
-  background: var(--gold);
-  color: var(--dark);
-}
+.btn-outline:hover { background: var(--gold); color: var(--terracotta-dk); }
 
-.bead-images {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: 0;
-}
+.bead-images { display: grid; grid-template-rows: 1fr 1fr; gap: 0; }
 
-.bead-img-item {
-  overflow: hidden;
-  transition: transform 0.5s ease;
-}
+.bead-img-item { overflow: hidden; }
 
-.bead-img-item img {
-  transition: transform 0.5s ease;
-}
-
-.bead-img-item:hover img {
-  transform: scale(1.04);
-}
+.bead-img-item img { transition: transform 0.5s ease; }
+.bead-img-item:hover img { transform: scale(1.04); }
 
 /* ── Full-bleed accessories ──────────────────────────────────────────────── */
 .full-bleed-section { padding: 0; }
@@ -659,7 +955,7 @@ a { text-decoration: none; color: inherit; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(0.6) saturate(1.3);
+  filter: brightness(0.58) saturate(1.4);
 }
 
 .full-bleed-overlay {
@@ -673,10 +969,10 @@ a { text-decoration: none; color: inherit; }
 .full-bleed-overlay h2 {
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 7vw, 6rem);
-  color: var(--white);
+  color: var(--cream);
   text-align: center;
-  text-shadow: 0 4px 30px rgba(0,0,0,0.35);
-  letter-spacing: -0.01em;
+  text-shadow: 0 4px 30px rgba(0,0,0,0.4);
+  letter-spacing: 0.01em;
 }
 
 /* ── Instagram CTA ───────────────────────────────────────────────────────── */
@@ -699,66 +995,88 @@ a { text-decoration: none; color: inherit; }
 .bg-star {
   position: absolute;
   color: var(--gold);
-  opacity: 0.12;
+  opacity: 0.1;
   animation: spinSlow var(--dur, 30s) linear infinite;
 }
 
-.bg-star.b1 { width: 180px; top: -5%;  left: -3%;  --dur: 28s; }
-.bg-star.b2 { width: 120px; top: 60%;  left: 10%;  --dur: 36s; }
-.bg-star.b3 { width: 200px; top: -8%;  right: 5%;  --dur: 22s; }
-.bg-star.b4 { width: 90px;  bottom: 5%; right: 20%; --dur: 40s; }
-.bg-star.b5 { width: 140px; top: 40%;  right: -2%; --dur: 32s; }
+.bg-star.b1 { width: 180px; top: -5%;   left: -3%;  --dur: 70s; }
+.bg-star.b2 { width: 120px; top: 60%;   left: 10%;  --dur: 80s; }
+.bg-star.b3 { width: 200px; top: -8%;   right: 5%;  --dur: 60s; }
+.bg-star.b4 { width: 90px;  bottom: 5%; right: 20%; --dur: 90s; }
+.bg-star.b5 { width: 140px; top: 40%;   right: -2%; --dur: 75s; }
 
-.insta-content {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-}
+.insta-content { position: relative; z-index: 1; text-align: center; }
 
 .insta-star {
   width: 80px;
   height: 80px;
   color: var(--gold);
-  animation: spinSlow 12s linear infinite;
+  animation: spinSlow 60s linear infinite;
   margin: 0 auto 1.5rem;
 }
 
 .insta-content h2 {
-  font-family: var(--font-head);
-  font-style: italic;
+  font-family: var(--font-display);
+  font-style: normal;
   font-size: clamp(2rem, 4.5vw, 3.5rem);
-  font-weight: 300;
-  color: var(--tan-dark);
+  font-weight: 400;
+  color: var(--terracotta-dk);
   margin-bottom: 2rem;
 }
 
 .btn-insta {
   display: inline-block;
-  background: var(--tan-dark);
-  color: var(--white);
+  background: var(--terracotta);
+  color: var(--cream);
   padding: 1rem 2.8rem;
   border-radius: 50px;
+  border: 2px solid var(--gold);
   font-size: 1.05rem;
   font-weight: 500;
   letter-spacing: 0.06em;
   transition: background 0.25s, transform 0.25s;
+  cursor: none;
 }
 
-.btn-insta:hover {
-  background: var(--gold);
-  color: var(--dark);
-  transform: scale(1.04);
-}
+.btn-insta:hover { background: var(--terracotta-dk); transform: scale(1.04); }
 
 /* ── Footer ──────────────────────────────────────────────────────────────── */
 #footer {
-  background: var(--tan-dark);
-  padding: 3rem 2.5rem;
+  background: var(--terracotta-dk);
+  padding: 0;
+  overflow: hidden;
+}
+
+.footer-tatreez-top {
+  width: 100%;
+  height: 24px;
+  background-image: var(--tatreez-border-svg);
+  background-repeat: repeat-x;
+  background-size: 40px 24px;
+  opacity: 0.6;
+  margin-bottom: 0;
+}
+
+.footer-bead-row {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0 0;
+  flex-wrap: wrap;
+}
+
+.footer-bead-row .fb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: inset -1px -1px 3px rgba(0,0,0,0.35), inset 1px 1px 3px rgba(255,255,255,0.2);
 }
 
 .footer-inner {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 2.5rem 2.5rem 3rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -766,28 +1084,22 @@ a { text-decoration: none; color: inherit; }
   gap: 1.5rem;
 }
 
-.footer-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-}
+.footer-brand { display: flex; align-items: center; gap: 0.7rem; }
 
 .footer-sun {
   width: 32px;
   height: 32px;
   color: var(--gold);
+  animation: spinSlow 60s linear infinite;
 }
 
 .footer-name {
   font-family: var(--font-display);
   font-size: 1.2rem;
-  color: var(--peach);
+  color: var(--cream);
 }
 
-.footer-nav {
-  display: flex;
-  gap: 2rem;
-}
+.footer-nav { display: flex; gap: 2rem; }
 
 .footer-nav a {
   color: var(--tan);
@@ -801,8 +1113,8 @@ a { text-decoration: none; color: inherit; }
 
 .footer-copy {
   font-size: 0.82rem;
-  color: var(--tan);
-  opacity: 0.7;
+  color: var(--cream);
+  opacity: 0.55;
   font-style: italic;
 }
 
@@ -818,6 +1130,10 @@ a { text-decoration: none; color: inherit; }
 
 @media (max-width: 680px) {
   .nav-links { display: none; }
+  .nav-links.open { display: flex; flex-direction: column; position: fixed; inset: 0; top: 0; background: rgba(253,246,236,0.97); backdrop-filter: blur(18px); align-items: center; justify-content: center; gap: 2rem; z-index: 99; }
+  .nav-links.open li::before { display: none; }
+  .nav-links.open a { font-size: 1.3rem; color: var(--terracotta-dk) !important; }
+  .nav-toggle { display: block; }
   .shop-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
   .product-img-wrap { height: 240px; }
   .gallery-grid { grid-template-columns: 1fr; }
@@ -827,4 +1143,10 @@ a { text-decoration: none; color: inherit; }
   .tatreez-overlay { padding: 2rem 1.5rem; }
   .section-pad { padding: 4rem 1.5rem; }
   #shop { padding: 4rem 1.5rem; }
+  .hero-bead-string .h-bead { width: 12px; height: 12px; }
+  .hero-bead-string .h-bead.lg { width: 16px; height: 16px; }
+  /* Reduce bead count on mobile handled in JS */
+  #cursor-dot, #cursor-canvas { display: none; }
+  body { cursor: auto; }
+  a, button { cursor: pointer; }
 }
