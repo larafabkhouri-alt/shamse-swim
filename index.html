@@ -375,6 +375,8 @@
   <!-- ── SOCIALS ── -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <section id="instagram" class="reveal-section insta-section">
+    <canvas id="insta-tatreez-canvas" aria-hidden="true"></canvas>
+    <div class="hero-tatreez-bg" aria-hidden="true"></div>
     <div class="insta-bg-stars" aria-hidden="true">
       <svg class="bg-star b1" viewBox="0 0 120 120"><use href="#shamse-12"/></svg>
       <svg class="bg-star b2" viewBox="0 0 120 120"><use href="#shamse-12"/></svg>
@@ -392,6 +394,41 @@
       </a>
     </div>
   </section>
+
+  <!-- ── Size Guide Modal ── -->
+  <div id="size-guide-modal" class="sg-overlay" role="dialog" aria-modal="true" aria-label="Size guide">
+    <div class="sg-panel">
+      <button class="sg-close" aria-label="Close">&times;</button>
+      <h3 class="sg-title">Size Guide</h3>
+      <table class="sg-table">
+        <thead>
+          <tr>
+            <th>Size</th>
+            <th>UK</th>
+            <th>Bust</th>
+            <th>Waist</th>
+            <th>Hip</th>
+            <th>Cup</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>S</td><td>6–8</td><td>83–88</td><td>66–72</td><td>95–100</td><td>A–B</td>
+          </tr>
+          <tr>
+            <td>M</td><td>10–12</td><td>88–93</td><td>72–78</td><td>100–105</td><td>B–C</td>
+          </tr>
+          <tr>
+            <td>L</td><td>14–16</td><td>93–98</td><td>78–84</td><td>105–110</td><td>C–D</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="sg-note">
+        <svg width="13" height="13" viewBox="0 0 120 120" aria-hidden="true"><use href="#shamse-12"/></svg>
+        All measurements are in CM
+      </p>
+    </div>
+  </div>
 
   <!-- ── Footer ── -->
   <footer id="footer">

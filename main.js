@@ -359,8 +359,8 @@ if (shopGrid) {
 }
 
 // ── Tatreez canvas animation ──────────────────────────────────────────────
-(function initTatreez() {
-  const canvas = document.getElementById('tatreez-canvas');
+function initTatreezCanvas(canvasId) {
+  const canvas = document.getElementById(canvasId);
   if (!canvas) return;
 
   const ctx = canvas.getContext('2d');
@@ -373,7 +373,6 @@ if (shopGrid) {
   resize();
   window.addEventListener('resize', resize, { passive: true });
 
-  // Jewel tones for the canvas pattern
   const colours = [
     'rgba(201,168,76,1)',
     'rgba(13,158,143,1)',
@@ -442,7 +441,6 @@ if (shopGrid) {
         const delay = Math.random() * 300;
 
         if (type === 0) {
-          // Central shamse + surrounding crosses
           motifs.push({ kind: 'shamse', x, y, r: 18, color, delay, alpha: 0, targetAlpha: 0.75 });
           for (let k = 0; k < 8; k++) {
             const a = (k / 8) * Math.PI * 2;
@@ -452,11 +450,9 @@ if (shopGrid) {
             });
           }
         } else if (type === 1 || type === 4) {
-          // Diamond motif
           motifs.push({ kind: 'diamond', x, y, size: 18, color, delay, alpha: 0, targetAlpha: 0.55 });
           motifs.push({ kind: 'diamond', x, y, size: 10, color, delay: delay + 20, alpha: 0, targetAlpha: 0.45 });
         } else {
-          // Grid of crosses
           for (let di = 0; di < 3; di++) {
             for (let dj = 0; dj < 3; dj++) {
               motifs.push({
@@ -482,24 +478,37 @@ if (shopGrid) {
   function render(ts) {
     if (!startTime) startTime = ts;
     const elapsed = ts - startTime;
-
     ctx.clearRect(0, 0, W, H);
-
     for (const m of motifs) {
       if (elapsed < m.delay) continue;
-
-      if (m.alpha < m.targetAlpha) {
-        m.alpha = Math.min(m.targetAlpha, m.alpha + FADE_SPEED);
-      }
+      if (m.alpha < m.targetAlpha) m.alpha = Math.min(m.targetAlpha, m.alpha + FADE_SPEED);
       if (m.alpha <= 0) continue;
-
       if      (m.kind === 'shamse')  drawShamse (m.x, m.y, m.r,    m.color, m.alpha);
       else if (m.kind === 'cross')   drawCross  (m.x, m.y, m.size, m.color, m.alpha);
       else if (m.kind === 'diamond') drawDiamond(m.x, m.y, m.size, m.color, m.alpha);
     }
-
     requestAnimationFrame(render);
   }
 
   requestAnimationFrame(render);
+}
+
+initTatreezCanvas('tatreez-canvas');
+initTatreezCanvas('insta-tatreez-canvas');
+
+// ── Size guide modal ──────────────────────────────────────────────────────
+(function initSizeGuide() {
+  const modal   = document.getElementById('size-guide-modal');
+  const btnClose = modal.querySelector('.sg-close');
+
+  function openSG()  { modal.classList.add('open');    document.body.style.overflow = 'hidden'; }
+  function closeSG() { modal.classList.remove('open'); document.body.style.overflow = ''; }
+
+  document.querySelectorAll('.size-guide-link').forEach(link => {
+    link.addEventListener('click', e => { e.preventDefault(); openSG(); });
+  });
+
+  btnClose.addEventListener('click', closeSG);
+  modal.addEventListener('click', e => { if (e.target === modal) closeSG(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) closeSG(); });
 })();
