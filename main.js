@@ -317,7 +317,6 @@ const heroCanvas    = document.getElementById('tatreez-canvas');
 const floatingStars = document.querySelector('.floating-stars');
 const heroContent   = document.querySelector('.hero-content');
 const scrollHint    = document.querySelector('.scroll-hint');
-const heroBeads     = document.getElementById('hero-beads');
 
 window.addEventListener('scroll', () => {
   const s       = window.scrollY;
@@ -329,7 +328,6 @@ window.addEventListener('scroll', () => {
   if (floatingStars) floatingStars.style.opacity = opacity;
   if (heroContent)   heroContent.style.opacity   = opacity;
   if (scrollHint)    scrollHint.style.opacity    = opacity;
-  if (heroBeads)     heroBeads.style.opacity      = opacity;
 }, { passive: true });
 
 // ── Scroll reveal ──────────────────────────────────────────────────────────
