@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shamse Swim — Sun-kissed swimwear. Palestinian soul.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Nav ── -->
+  <nav id="nav">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <svg class="nav-sun" viewBox="0 0 40 40" aria-hidden="true">
+          <use href="#shamse-icon" />
+        </svg>
+        <span>Shamse</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#gallery">Collection</a></li>
+        <li><a href="#shop">Shop</a></li>
+        <li><a href="#beads">Beads</a></li>
+        <li><a href="https://www.instagram.com/shamse_swim/" target="_blank" rel="noopener">Instagram</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ── SVG Defs ── -->
+  <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <symbol id="shamse-icon" viewBox="0 0 100 100">
+        <!-- 8-pointed star shamse -->
+        <polygon points="50,4 56,30 76,10 62,34 90,34 68,50 90,66 62,66 76,90 56,70 50,96 44,70 24,90 38,66 10,66 32,50 10,34 38,34 24,10 44,30" fill="currentColor"/>
+        <circle cx="50" cy="50" r="14" fill="currentColor"/>
+      </symbol>
+      <symbol id="shamse-12" viewBox="0 0 120 120">
+        <!-- 12-ray sun for logo badge -->
+        <g fill="#D4A535">
+          <polygon points="60,4 64,28 80,8 70,32 94,20 74,40 100,40 78,54 100,68 74,62 92,82 68,70 68,96 58,72 38,92 46,68 20,80 38,62 12,68 34,54 12,40 38,40 18,20 42,32 46,8 62,28"/>
+          <circle cx="60" cy="60" r="18"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- ── Section 1: Hero ── -->
+  <section id="hero">
+    <canvas id="tatreez-canvas"></canvas>
+
+    <!-- Floating shamse stars -->
+    <div class="floating-stars" aria-hidden="true">
+      <svg class="float-star s1" viewBox="0 0 100 100"><use href="#shamse-icon"/></svg>
+      <svg class="float-star s2" viewBox="0 0 100 100"><use href="#shamse-icon"/></svg>
+      <svg class="float-star s3" viewBox="0 0 100 100"><use href="#shamse-icon"/></svg>
+      <svg class="float-star s4" viewBox="0 0 100 100"><use href="#shamse-icon"/></svg>
+      <svg class="float-star s5" viewBox="0 0 100 100"><use href="#shamse-icon"/></svg>
+      <svg class="float-star s6" viewBox="0 0 100 100"><use href="#shamse-icon"/></svg>
+    </div>
+
+    <div class="hero-content" id="hero-logo">
+      <div class="logo-wrap">
+        <svg class="logo-sun-badge" viewBox="0 0 120 120" aria-hidden="true">
+          <use href="#shamse-12"/>
+        </svg>
+        <h1 class="logo-text">Shamse</h1>
+        <div class="logo-dash" aria-hidden="true"></div>
+      </div>
+      <p class="hero-tagline">Sun-kissed swimwear. Palestinian soul.</p>
+    </div>
+
+    <div class="scroll-hint" aria-hidden="true">
+      <span></span>
+    </div>
+  </section>
+
+  <!-- ── Section 2: Letters reveal ── -->
+  <section id="letters" class="reveal-section">
+    <div class="letters-image-wrap">
+      <img src="images/shamse-letters.jpg" alt="SHAMSE spelled in iridescent gemstone beads" loading="lazy" />
+      <div class="letters-overlay">
+        <p class="letters-sub">شمسة</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Section 3: Gallery Grid ── -->
+  <section id="gallery" class="reveal-section section-pad">
+    <div class="section-header">
+      <h2>The Collection</h2>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item wide">
+        <img src="images/black-turquoise.jpg" alt="Black and turquoise tatreez bikini" loading="lazy" />
+        <div class="gallery-label">Black + Turquoise</div>
+      </div>
+      <div class="gallery-item tall">
+        <img src="images/red-bodychain.jpg" alt="Red tatreez bikini with gold body chain" loading="lazy" />
+        <div class="gallery-label">Red + Gold Chain</div>
+      </div>
+      <div class="gallery-item">
+        <img src="images/green-beach.jpg" alt="Sage green tatreez bikini at the beach" loading="lazy" />
+        <div class="gallery-label">Sage + Millefiori</div>
+      </div>
+      <div class="gallery-item">
+        <img src="images/purple-sun.jpg" alt="Purple tatreez top with gold bead strap" loading="lazy" />
+        <div class="gallery-label">Purple + Sun</div>
+      </div>
+      <div class="gallery-item">
+        <img src="images/swimsuits-wall.jpg" alt="Three swimsuits hanging on a sun-drenched wall" loading="lazy" />
+        <div class="gallery-label">The Lineup</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Section 4: Tatreez Feature ── -->
+  <section id="tatreez" class="reveal-section tatreez-feature">
+    <div class="tatreez-img-wrap">
+      <img src="images/green-bikini.jpg" alt="Sage green tatreez bikini" loading="lazy" />
+      <div class="tatreez-overlay">
+        <svg class="tatreez-spin-star" viewBox="0 0 120 120" aria-hidden="true">
+          <use href="#shamse-12"/>
+        </svg>
+        <div class="tatreez-text">
+          <h2>Every stitch tells a story</h2>
+          <p>Palestinian tatreez embroidery, passed down through generations of women, transforms thread into memory — each geometric pattern a map of home, resistance, and belonging.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Section 5: Shop ── -->
+  <section id="shop" class="reveal-section section-pad">
+    <div class="section-header">
+      <h2>Shop the Sun</h2>
+      <p class="section-sub">Hand-crafted bead straps. Tatreez-inspired embroidery.</p>
+    </div>
+    <div class="shop-grid">
+
+      <article class="product-card">
+        <a href="https://www.instagram.com/shamse_swim/" target="_blank" rel="noopener" class="product-link">
+          <div class="product-img-wrap">
+            <img src="images/product-teal.jpg" alt="Teal tatreez swimsuit" loading="lazy" />
+            <svg class="product-shamse" viewBox="0 0 120 120" aria-hidden="true"><use href="#shamse-12"/></svg>
+          </div>
+          <div class="product-info">
+            <h3>The Shamse Teal</h3>
+            <p>Turquoise tatreez · millefiori bead strap</p>
+            <span class="product-cta">Shop on Instagram →</span>
+          </div>
+        </a>
+      </article>
+
+      <article class="product-card">
+        <a href="https://www.instagram.com/shamse_swim/" target="_blank" rel="noopener" class="product-link">
+          <div class="product-img-wrap">
+            <img src="images/product-black.jpg" alt="Black and gold tatreez swimsuit" loading="lazy" />
+            <svg class="product-shamse" viewBox="0 0 120 120" aria-hidden="true"><use href="#shamse-12"/></svg>
+          </div>
+          <div class="product-info">
+            <h3>The Midnight Gold</h3>
+            <p>Black canvas · gold tatreez · turquoise bead strap</p>
+            <span class="product-cta">Shop on Instagram →</span>
+          </div>
+        </a>
+      </article>
+
+      <article class="product-card">
+        <a href="https://www.instagram.com/shamse_swim/" target="_blank" rel="noopener" class="product-link">
+          <div class="product-img-wrap">
+            <img src="images/product-red.jpg" alt="Red tatreez bikini with gold body chain" loading="lazy" />
+            <svg class="product-shamse" viewBox="0 0 120 120" aria-hidden="true"><use href="#shamse-12"/></svg>
+          </div>
+          <div class="product-info">
+            <h3>The Crimson Chain</h3>
+            <p>Red tatreez · gold sun body chain</p>
+            <span class="product-cta">Shop on Instagram →</span>
+          </div>
+        </a>
+      </article>
+
+      <article class="product-card">
+        <a href="https://www.instagram.com/shamse_swim/" target="_blank" rel="noopener" class="product-link">
+          <div class="product-img-wrap">
+            <img src="images/purple-sun.jpg" alt="Purple tatreez top with sun charms" loading="lazy" />
+            <svg class="product-shamse" viewBox="0 0 120 120" aria-hidden="true"><use href="#shamse-12"/></svg>
+          </div>
+          <div class="product-info">
+            <h3>The Violet Sun</h3>
+            <p>Purple tatreez · gold bead strap · sun charms</p>
+            <span class="product-cta">Shop on Instagram →</span>
+          </div>
+        </a>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ── Section 6: Bead Straps Showcase ── -->
+  <section id="beads" class="reveal-section bead-showcase">
+    <div class="bead-text">
+      <p class="bead-eyebrow">Handmade in Palestine</p>
+      <h2>The Bead Straps</h2>
+      <p>Each strap is hand-strung with millefiori glass beads, turquoise stones, and gemstones sourced from across the Mediterranean. No two straps are exactly alike.</p>
+      <a href="https://www.instagram.com/shamse_swim/" target="_blank" rel="noopener" class="btn-outline">Shop Straps</a>
+    </div>
+    <div class="bead-images">
+      <div class="bead-img-item">
+        <img src="images/beads.jpg" alt="Colourful gemstone bead strands" loading="lazy" />
+      </div>
+      <div class="bead-img-item">
+        <img src="images/purple-beads.jpg" alt="Purple bikini with millefiori bead strap" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Section 7: Full-bleed accessories ── -->
+  <section id="accessories" class="reveal-section full-bleed-section">
+    <div class="full-bleed-img">
+      <img src="images/purple-beads.jpg" alt="Purple beach editorial with gemstone jewellery" loading="lazy" />
+      <div class="full-bleed-overlay">
+        <h2>Colourful as the sea</h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Section 8: Instagram CTA ── -->
+  <section id="instagram" class="reveal-section insta-section">
+    <div class="insta-bg-stars" aria-hidden="true">
+      <svg class="bg-star b1" viewBox="0 0 120 120"><use href="#shamse-12"/></svg>
+      <svg class="bg-star b2" viewBox="0 0 120 120"><use href="#shamse-12"/></svg>
+      <svg class="bg-star b3" viewBox="0 0 120 120"><use href="#shamse-12"/></svg>
+      <svg class="bg-star b4" viewBox="0 0 120 120"><use href="#shamse-12"/></svg>
+      <svg class="bg-star b5" viewBox="0 0 120 120"><use href="#shamse-12"/></svg>
+    </div>
+    <div class="insta-content">
+      <svg class="insta-star" viewBox="0 0 120 120" aria-hidden="true"><use href="#shamse-12"/></svg>
+      <h2>Find us in the sun</h2>
+      <a href="https://www.instagram.com/shamse_swim/" target="_blank" rel="noopener" class="btn-insta">
+        @shamse_swim
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer id="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <svg class="footer-sun" viewBox="0 0 120 120" aria-hidden="true"><use href="#shamse-12"/></svg>
+        <span class="footer-name">Shamse Swim</span>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="#gallery">Collection</a>
+        <a href="#shop">Shop</a>
+        <a href="#beads">Beads</a>
+        <a href="https://www.instagram.com/shamse_swim/" target="_blank" rel="noopener">Instagram</a>
+      </nav>
+      <p class="footer-copy">شمسة — Sun-kissed swimwear. Palestinian soul.</p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
