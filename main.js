@@ -431,13 +431,13 @@ function initTatreezCanvas(canvasId) {
         const a = angle + dt;
         return [x + dr * Math.cos(a), y + dr * Math.sin(a)];
       }
-      const [bx1, by1] = pt(rInner, 0.12);
-      const [bx2, by2] = pt(rInner, -0.12);
+      const [bx1, by1] = pt(rInner, 0.13);
+      const [bx2, by2] = pt(rInner, -0.13);
       const [tx,  ty]  = [x + rOuter * cos, y + rOuter * sin];
-      const [c1x, c1y] = pt(rInner * 1.6, 0.18);
-      const [c2x, c2y] = pt(rOuter * 0.75, 0.06);
-      const [c3x, c3y] = pt(rOuter * 0.75, -0.06);
-      const [c4x, c4y] = pt(rInner * 1.6, -0.18);
+      const [c1x, c1y] = pt(rInner * 1.9, 0.22);
+      const [c2x, c2y] = pt(rOuter * 0.72, -0.04);
+      const [c3x, c3y] = pt(rOuter * 0.72, 0.04);
+      const [c4x, c4y] = pt(rInner * 1.9, -0.22);
       ctx.beginPath();
       ctx.moveTo(bx1, by1);
       ctx.bezierCurveTo(c1x, c1y, c2x, c2y, tx, ty);
