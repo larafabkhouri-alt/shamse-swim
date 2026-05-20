@@ -706,10 +706,12 @@ button { font-family: var(--font-body); cursor: none; }
 }
 
 /* Hover: subtle scale on image */
+.product-img-wrap img,
 .product-img-wrap .ph {
   transition: transform 0.55s cubic-bezier(0.22,1,0.36,1), filter 0.55s ease;
 }
-.product-card:hover .product-img-wrap .ph { transform: scale(1.03); filter: brightness(1.04); }
+.product-card:hover .product-img-wrap img,
+.product-card:hover .product-img-wrap .ph { transform: scale(1.03); filter: brightness(1.04) saturate(1.08); }
 
 .product-info { padding: 1.4rem 0 0; }
 
