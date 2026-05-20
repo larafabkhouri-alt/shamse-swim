@@ -357,8 +357,8 @@ button { font-family: var(--font-body); cursor: none; }
 
 .logo-sun-badge {
   position: absolute;
-  top: -0.38em;
-  left: -0.32em;
+  top: -0.58em;
+  left: -0.55em;
   width: clamp(44px, 4.8vw, 78px);
   height: auto;
   filter: drop-shadow(0 2px 12px rgba(255,232,124,0.5));
