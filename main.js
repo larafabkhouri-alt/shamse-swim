@@ -386,8 +386,8 @@ function initTatreezCanvas(canvasId) {
   let W, H;
 
   function resize() {
-    W = canvas.width  = canvas.offsetWidth;
-    H = canvas.height = canvas.offsetHeight;
+    W = canvas.width  = canvas.offsetWidth  || window.innerWidth;
+    H = canvas.height = canvas.offsetHeight || window.innerHeight;
   }
   resize();
   window.addEventListener('resize', resize, { passive: true });
@@ -581,9 +581,21 @@ function initTatreezCanvas(canvasId) {
     return motifs;
   }
 
-  const motifs     = buildMotifs();
-  let   startTime  = null;
+  let motifs    = buildMotifs();
+  let startTime = null;
   const FADE_SPEED = 0.016;
+
+  // Rebuild motifs if canvas was sized from a fallback (e.g. loading screen on first layout)
+  const initW = W, initH = H;
+  requestAnimationFrame(() => {
+    const realW = canvas.offsetWidth  || window.innerWidth;
+    const realH = canvas.offsetHeight || window.innerHeight;
+    if (realW !== initW || realH !== initH) {
+      W = canvas.width  = realW;
+      H = canvas.height = realH;
+      motifs = buildMotifs();
+    }
+  });
 
   function render(ts) {
     if (!startTime) startTime = ts;
