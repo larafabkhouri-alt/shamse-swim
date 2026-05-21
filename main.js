@@ -464,8 +464,8 @@ function initTatreezCanvas(canvasId, opts) {
 
   function buildMotifs() {
     const motifs = [];
-    const tileW  = 155;
-    const tileH  = 210;
+    const tileW  = 160;
+    const tileH  = 200;
 
     function xc(x, y, color, delay, alpha = 0.88) {
       motifs.push({ kind: 'cross', x, y, size: 4.5, color, delay, alpha: 0, targetAlpha: alpha });
@@ -474,196 +474,89 @@ function initTatreezCanvas(canvasId, opts) {
       motifs.push({ kind: 'diamond', x, y, size: sz, color, delay, alpha: 0, targetAlpha: alpha });
     }
 
-    // ── Pattern A helpers ─────────────────────────────────────────────────
-
-    function tree(bx, by, color, d) {
-      const sp = 11;
-      for (let i = 0; i <= 7; i++) xc(bx, by - i * sp, color, d + i * 13);
-      for (let b = 1; b <= 4; b++) {
-        xc(bx + b * sp, by - sp,      color, d + 38 + b * 9, 0.84);
-        xc(bx - b * sp, by - sp,      color, d + 38 + b * 9, 0.84);
-      }
-      xc(bx + sp * 4.7, by + sp * 0.4, color, d + 82, 0.66);
-      xc(bx - sp * 4.7, by + sp * 0.4, color, d + 82, 0.66);
-      for (let b = 1; b <= 3; b++) {
-        xc(bx + b * sp, by - sp * 3.6, color, d + 54 + b * 9, 0.84);
-        xc(bx - b * sp, by - sp * 3.6, color, d + 54 + b * 9, 0.84);
-      }
-      xc(bx + sp * 3.6, by - sp * 2.9, color, d + 98,  0.66);
-      xc(bx - sp * 3.6, by - sp * 2.9, color, d + 98,  0.66);
-      for (let b = 1; b <= 2; b++) {
-        xc(bx + b * sp, by - sp * 6.1, color, d + 68 + b * 9, 0.84);
-        xc(bx - b * sp, by - sp * 6.1, color, d + 68 + b * 9, 0.84);
-      }
-      xc(bx - sp * 0.8, by - sp * 7.3, color, d + 108, 0.78);
-      xc(bx + sp * 0.8, by - sp * 7.3, color, d + 108, 0.78);
-      xc(bx,            by - sp * 8.1, color, d + 118, 0.78);
-    }
-
-    function invertedTree(tx, ty, color, d) {
-      const sp = 10;
-      xc(tx - sp * 0.8, ty,           color, d +  5, 0.72);
-      xc(tx + sp * 0.8, ty,           color, d +  5, 0.72);
-      xc(tx,            ty + sp,      color, d + 14, 0.74);
-      for (let b = 1; b <= 2; b++) {
-        xc(tx + b * sp, ty + sp * 2.2, color, d + 28 + b * 8, 0.72);
-        xc(tx - b * sp, ty + sp * 2.2, color, d + 28 + b * 8, 0.72);
-      }
-      for (let b = 1; b <= 3; b++) {
-        xc(tx + b * sp, ty + sp * 4,   color, d + 48 + b * 8, 0.72);
-        xc(tx - b * sp, ty + sp * 4,   color, d + 48 + b * 8, 0.72);
-      }
-      for (let i = 2; i <= 4; i++) xc(tx, ty + sp * i, color, d + i * 11, 0.76);
-    }
-
-    function triangleArch(ax, ay, color, d) {
-      const sp = 11, rows = 8;
-      for (let r = 0; r <= rows; r++) {
-        const y = ay + r * sp * 1.1, spread = r * sp;
-        xc(ax - spread, y, color, d + r * 14, 0.88);
-        if (r > 0) xc(ax + spread, y, color, d + r * 14, 0.88);
-        if (r === rows) {
-          for (let f = -(rows - 1); f < rows; f++)
-            if (f !== 0) xc(ax + f * sp, y, color, d + rows * 14 + Math.abs(f) * 5, 0.78);
-        }
-      }
-      dm(ax, ay + rows * sp * 0.55, 11, color, d + 88, 0.76);
-      dm(ax, ay + rows * sp * 0.55,  6, color, d + 98, 0.70);
-      xc(ax, ay + rows * sp * 0.3,  color, d + 68, 0.76);
-    }
-
-    function sideBracket(bx, by, dir, color, d) {
-      const sp = 11;
-      for (let i = 0; i < 4; i++) xc(bx, by + i * sp, color, d + i * 12, 0.72);
-      xc(bx + dir * sp,     by,          color, d + 24, 0.66);
-      xc(bx + dir * sp,     by + sp * 3, color, d + 34, 0.66);
-      xc(bx + dir * sp * 2, by + sp,     color, d + 44, 0.60);
-      xc(bx + dir * sp * 2, by + sp * 2, color, d + 49, 0.60);
-    }
-
-    // ── Pattern B helpers ─────────────────────────────────────────────────
-
-    // Wide convex arch with upward central fork at the top
+    // Wide convex crown arch — upward fork at center, arms sweep outward + down
     function crownArch(cx, cy, color, d) {
       const sp = 11;
-      xc(cx,            cy,           color, d,      0.82);
-      xc(cx - sp * 0.8, cy + sp,      color, d +  8, 0.76);
-      xc(cx + sp * 0.8, cy + sp,      color, d +  8, 0.76);
+      xc(cx,            cy,            color, d,      0.82);
+      xc(cx - sp * 0.8, cy + sp,       color, d +  8, 0.76);
+      xc(cx + sp * 0.8, cy + sp,       color, d +  8, 0.76);
       xc(cx,            cy + sp * 1.8, color, d + 14, 0.82);
       for (let i = 1; i <= 5; i++) {
-        const sag = Math.pow(i / 5, 2) * sp * 1.2;
-        xc(cx + i * sp * 1.2, cy + sp * 2.2 + sag, color, d + 18 + i * 10, 0.74);
-        xc(cx - i * sp * 1.2, cy + sp * 2.2 + sag, color, d + 18 + i * 10, 0.74);
+        const sag = Math.pow(i / 5, 2) * sp * 1.4;
+        xc(cx + i * sp * 1.2, cy + sp * 2.3 + sag, color, d + 18 + i * 10, 0.74);
+        xc(cx - i * sp * 1.2, cy + sp * 2.3 + sag, color, d + 18 + i * 10, 0.74);
       }
       for (let k = 0; k < 3; k++) {
-        xc(cx + sp * (6.4 + k * 0.9), cy + sp * (3.0 + k * 0.8), color, d + 72 + k * 9, 0.62);
-        xc(cx - sp * (6.4 + k * 0.9), cy + sp * (3.0 + k * 0.8), color, d + 72 + k * 9, 0.62);
+        xc(cx + sp * (6.3 + k * 0.9), cy + sp * (3.8 + k * 0.9), color, d + 72 + k * 9, 0.62);
+        xc(cx - sp * (6.3 + k * 0.9), cy + sp * (3.8 + k * 0.9), color, d + 72 + k * 9, 0.62);
       }
     }
 
-    // Large downward-pointing V (two diagonal lines from wide top to apex)
-    function largeDownV(cx, cy, color, d) {
-      const sp    = 11;
-      const rows  = 8;
-      const halfW = sp * 5;
+    // Large downward V — wide at top, tapers to apex; matching slope for stagger continuity
+    function largeDownV(ax, ay, color, d) {
+      const rows  = 9;
+      const stepY = 13;
+      const halfW = 66;
       for (let r = 0; r <= rows; r++) {
-        const y      = cy + r * sp * 1.3;
-        const spread = Math.round(halfW * (rows - r) / rows / sp) * sp;
-        xc(cx - spread, y, color, d + r * 12, 0.86);
-        if (spread >= sp) xc(cx + spread, y, color, d + r * 12, 0.86);
-      }
-      // Hanging small tree / pendant from apex
-      const tipY = cy + rows * sp * 1.3;
-      xc(cx, tipY + sp,      color, d + 120, 0.72);
-      xc(cx, tipY + sp * 2,  color, d + 128, 0.72);
-      for (let b = 1; b <= 2; b++) {
-        xc(cx + b * sp, tipY + sp * 1.5, color, d + 132 + b * 8, 0.66);
-        xc(cx - b * sp, tipY + sp * 1.5, color, d + 132 + b * 8, 0.66);
+        const y      = ay + r * stepY;
+        const spread = Math.round(halfW * (rows - r) / rows / 11) * 11;
+        xc(ax - spread, y, color, d + r * 12, 0.88);
+        if (spread > 0) xc(ax + spread, y, color, d + r * 12, 0.88);
       }
     }
 
-    // Tall I-beam side column
+    // Tall I-beam column — vertical bar + top/mid/bottom horizontal arms
     function iBeamColumn(cx, cy, dir, color, d) {
       const sp = 11;
-      for (let i = 0; i < 7; i++) xc(cx, cy + i * sp, color, d + i * 10, 0.68);
+      for (let i = 0; i < 7; i++) xc(cx, cy + i * sp, color, d + i * 9, 0.68);
       for (let j = 1; j <= 3; j++) {
-        xc(cx + dir * j * sp, cy,          color, d + j * 8 + 20, 0.60);
-        xc(cx + dir * j * sp, cy + sp * 6, color, d + j * 8 + 28, 0.60);
+        xc(cx + dir * j * sp, cy,          color, d + j * 7 + 20, 0.60);
+        xc(cx + dir * j * sp, cy + sp * 6, color, d + j * 7 + 27, 0.60);
       }
-      for (let j = 1; j <= 2; j++) {
-        xc(cx + dir * j * sp, cy + sp * 3, color, d + j * 8 + 36, 0.54);
+      for (let j = 1; j <= 2; j++)
+        xc(cx + dir * j * sp, cy + sp * 3, color, d + j * 7 + 34, 0.54);
+    }
+
+    // Pendant hanging below V apex — inverted branching tree
+    function pendant(tx, ty, color, d) {
+      const sp = 10;
+      xc(tx, ty,            color, d,      0.74);
+      xc(tx, ty + sp,       color, d +  8, 0.72);
+      for (let b = 1; b <= 2; b++) {
+        xc(tx + b * sp, ty + sp * 2,   color, d + 18 + b * 8, 0.68);
+        xc(tx - b * sp, ty + sp * 2,   color, d + 18 + b * 8, 0.68);
       }
-    }
-
-    // Curved bracket drooping below the V apex
-    function curvedBracket(cx, cy, color, d) {
-      const sp = 11;
-      for (let i = -3; i <= 3; i++) xc(cx + i * sp, cy, color, d + Math.abs(i) * 6, 0.70);
-      for (let i = 1; i <= 3; i++) {
-        xc(cx + i * sp * 1.1, cy + sp * i * 0.55, color, d + 38 + i * 9, 0.64);
-        xc(cx - i * sp * 1.1, cy + sp * i * 0.55, color, d + 38 + i * 9, 0.64);
+      for (let b = 1; b <= 3; b++) {
+        xc(tx + b * sp, ty + sp * 3.5, color, d + 36 + b * 7, 0.66);
+        xc(tx - b * sp, ty + sp * 3.5, color, d + 36 + b * 7, 0.66);
       }
-      xc(cx + sp * 3.6, cy + sp * 2,   color, d + 72, 0.56);
-      xc(cx - sp * 3.6, cy + sp * 2,   color, d + 72, 0.56);
+      xc(tx, ty + sp * 4.5, color, d + 58, 0.70);
     }
 
-    // Small downward fork at very bottom of tile B
-    function smallFork(cx, cy, color, d) {
-      const sp = 11;
-      xc(cx,            cy,           color, d,      0.70);
-      xc(cx,            cy + sp,      color, d +  8, 0.70);
-      xc(cx - sp * 0.8, cy + sp * 1.8, color, d + 15, 0.64);
-      xc(cx + sp * 0.8, cy + sp * 1.8, color, d + 15, 0.64);
-      xc(cx - sp * 1.7, cy + sp * 2.5, color, d + 22, 0.58);
-      xc(cx + sp * 1.7, cy + sp * 2.5, color, d + 22, 0.58);
-    }
+    // Every tile: crown arch → large V → diamond inside → I-beam sides → pendant below
+    function tile(cx, cy, c1, c2, d) {
+      const vApexY  = cy + 48;
+      const vTipY   = vApexY + 9 * 13;          // cy + 165
+      const diamY   = vApexY + 9 * 13 * 0.58;   // cy + 116
 
-    // Full-width border row
-    function borderLine(y, color, d) {
-      const sp = 22;
-      for (let x = -60; x < W + 100; x += sp)
-        xc(x, y, color, d + Math.max(0, x) / sp * 6, 0.66);
-    }
-
-    // ── Tile assembly ─────────────────────────────────────────────────────
-
-    function tileA(cx, cy, c1, c2, d) {
-      tree(cx, cy + 95, c1, d);
-      triangleArch(cx, cy + 100, c2, d + 25);
-      invertedTree(cx, cy + 195, c1, d + 50);
-      sideBracket(cx - tileW * 0.38, cy + 85, +1, c2, d + 65);
-      sideBracket(cx + tileW * 0.38, cy + 85, -1, c2, d + 65);
-    }
-
-    function tileB(cx, cy, c1, c2, d) {
-      crownArch(cx, cy + 18, c1, d);
-      borderLine(cy + 58, c2, d + 20);
-      borderLine(cy + 68, c2, d + 24);
-      largeDownV(cx, cy + 75, c2, d + 35);
-      dm(cx, cy + 128, 13, c1, d + 65, 0.76);
-      dm(cx, cy + 128,  7, c1, d + 75, 0.70);
-      iBeamColumn(cx - tileW * 0.44, cy + 70, +1, c2, d + 50);
-      iBeamColumn(cx + tileW * 0.44, cy + 70, -1, c2, d + 50);
-      curvedBracket(cx, cy + 162, c1, d + 85);
-      smallFork(cx, cy + 182, c2, d + 105);
+      crownArch(cx, cy + 6, c1, d);
+      largeDownV(cx, vApexY, c2, d + 28);
+      dm(cx, diamY, 13, c1, d + 62, 0.76);
+      dm(cx, diamY,  7, c1, d + 72, 0.70);
+      iBeamColumn(cx - tileW * 0.43, vApexY + 4, +1, c2, d + 46);
+      iBeamColumn(cx + tileW * 0.43, vApexY + 4, -1, c2, d + 46);
+      pendant(cx, vTipY, c1, d + 88);
     }
 
     for (let col = -1; col * tileW < W + tileW; col++) {
       for (let row = -1; row * tileH < H + tileH; row++) {
-        const cx  = col * tileW;
-        const cy  = row * tileH;
-        const c1  = colours[((col + 20) * 2 + (row + 20))          % colours.length];
-        const c2  = colours[((col + 20) * 3 + (row + 20) * 2 + 1)  % colours.length];
-        const d   = Math.random() * 220;
-        if ((row + 20) % 2 === 0) tileA(cx, cy, c1, c2, d);
-        else                      tileB(cx, cy, c1, c2, d);
+        const cx = col * tileW + ((row + 20) % 2 === 1 ? tileW * 0.5 : 0);
+        const cy = row * tileH;
+        const c1 = colours[((col + 20) * 2 + (row + 20))         % colours.length];
+        const c2 = colours[((col + 20) * 3 + (row + 20) * 2 + 1) % colours.length];
+        const d  = Math.random() * 220;
+        tile(cx, cy, c1, c2, d);
       }
-    }
-
-    // Single border band between A rows (at A tile bottom)
-    for (let row = 0; row * tileH < H + tileH * 2; row++) {
-      if ((row + 20) % 2 === 0)
-        borderLine(row * tileH + 192, colours[row % colours.length], row * 22);
     }
 
     return motifs;
