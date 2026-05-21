@@ -465,7 +465,8 @@ function initTatreezCanvas(canvasId, opts) {
   function buildMotifs() {
     const motifs = [];
     const tileW  = 160;
-    const tileH  = 200;
+    const tileH  = 185;
+    const sp     = 10;
 
     function xc(x, y, color, delay, alpha = 0.88) {
       motifs.push({ kind: 'cross', x, y, size: 4.5, color, delay, alpha: 0, targetAlpha: alpha });
@@ -474,40 +475,50 @@ function initTatreezCanvas(canvasId, opts) {
       motifs.push({ kind: 'diamond', x, y, size: sz, color, delay, alpha: 0, targetAlpha: alpha });
     }
 
-    // Wide convex crown arch — upward fork at center, arms sweep outward + down
-    function crownArch(cx, cy, color, d) {
-      const sp = 11;
-      xc(cx,            cy,            color, d,      0.82);
-      xc(cx - sp * 0.8, cy + sp,       color, d +  8, 0.76);
-      xc(cx + sp * 0.8, cy + sp,       color, d +  8, 0.76);
-      xc(cx,            cy + sp * 1.8, color, d + 14, 0.82);
-      for (let i = 1; i <= 5; i++) {
-        const sag = Math.pow(i / 5, 2) * sp * 1.4;
-        xc(cx + i * sp * 1.2, cy + sp * 2.3 + sag, color, d + 18 + i * 10, 0.74);
-        xc(cx - i * sp * 1.2, cy + sp * 2.3 + sag, color, d + 18 + i * 10, 0.74);
-      }
-      for (let k = 0; k < 3; k++) {
-        xc(cx + sp * (6.3 + k * 0.9), cy + sp * (3.8 + k * 0.9), color, d + 72 + k * 9, 0.62);
-        xc(cx - sp * (6.3 + k * 0.9), cy + sp * (3.8 + k * 0.9), color, d + 72 + k * 9, 0.62);
+    // Horizontal band of evenly-spaced crosses spanning full tile width
+    function band(cx, cy, color, d) {
+      const half = Math.ceil(tileW / sp / 2) + 1;
+      for (let i = -half; i <= half; i++) {
+        xc(cx + i * sp, cy, color, d + Math.abs(i) * 3, 0.86);
       }
     }
 
-    // Large downward V — wide at top, tapers to apex; matching slope for stagger continuity
+    // Small upward crown/fork just above the band
+    function crown(cx, cy, color, d) {
+      xc(cx,        cy,          color, d,      0.80); // stem base
+      xc(cx,        cy - sp,     color, d + 5,  0.78); // stem tip
+      xc(cx - sp,   cy - sp * 2, color, d + 10, 0.74); // left prong
+      xc(cx,        cy - sp * 2, color, d + 10, 0.76); // center prong
+      xc(cx + sp,   cy - sp * 2, color, d + 10, 0.74); // right prong
+    }
+
+    // Large downward V — wide at top (band level), tapers to point at bottom
     function largeDownV(ax, ay, color, d) {
       const rows  = 9;
       const stepY = 13;
-      const halfW = 66;
+      const halfW = Math.round(tileW * 0.42);
       for (let r = 0; r <= rows; r++) {
         const y      = ay + r * stepY;
-        const spread = Math.round(halfW * (rows - r) / rows / 11) * 11;
+        const spread = Math.round(halfW * (rows - r) / rows / sp) * sp;
         xc(ax - spread, y, color, d + r * 12, 0.88);
         if (spread > 0) xc(ax + spread, y, color, d + r * 12, 0.88);
       }
     }
 
+    // Small candelabra tree inside V (left or right of center)
+    function innerTree(cx, cy, color, d) {
+      for (let i = 0; i < 4; i++) xc(cx, cy + i * sp, color, d + i * 7, 0.72);
+      xc(cx, cy - sp, color, d + 5, 0.70);
+      for (let j = 1; j <= 2; j++) {
+        xc(cx - j * sp, cy + sp, color, d + 16 + j * 6, 0.66);
+        xc(cx + j * sp, cy + sp, color, d + 16 + j * 6, 0.66);
+      }
+      xc(cx - sp, cy + sp * 2.5, color, d + 30, 0.62);
+      xc(cx + sp, cy + sp * 2.5, color, d + 30, 0.62);
+    }
+
     // Tall I-beam column — vertical bar + top/mid/bottom horizontal arms
     function iBeamColumn(cx, cy, dir, color, d) {
-      const sp = 11;
       for (let i = 0; i < 7; i++) xc(cx, cy + i * sp, color, d + i * 9, 0.68);
       for (let j = 1; j <= 3; j++) {
         xc(cx + dir * j * sp, cy,          color, d + j * 7 + 20, 0.60);
@@ -519,9 +530,8 @@ function initTatreezCanvas(canvasId, opts) {
 
     // Pendant hanging below V apex — inverted branching tree
     function pendant(tx, ty, color, d) {
-      const sp = 10;
-      xc(tx, ty,            color, d,      0.74);
-      xc(tx, ty + sp,       color, d +  8, 0.72);
+      xc(tx, ty,                color, d,       0.74);
+      xc(tx, ty + sp,           color, d + 8,   0.72);
       for (let b = 1; b <= 2; b++) {
         xc(tx + b * sp, ty + sp * 2,   color, d + 18 + b * 8, 0.68);
         xc(tx - b * sp, ty + sp * 2,   color, d + 18 + b * 8, 0.68);
@@ -533,19 +543,26 @@ function initTatreezCanvas(canvasId, opts) {
       xc(tx, ty + sp * 4.5, color, d + 58, 0.70);
     }
 
-    // Every tile: crown arch → large V → diamond inside → I-beam sides → pendant below
+    // Full tile: band → crown above → V from band → inner trees → diamond → I-beams → pendant
     function tile(cx, cy, c1, c2, d) {
-      const vApexY  = cy + 48;
-      const vTipY   = vApexY + 9 * 13;          // cy + 165
-      const diamY   = vApexY + 9 * 13 * 0.58;   // cy + 116
+      const bandY  = cy;
+      const vRows  = 9;
+      const vStepY = 13;
+      const vH     = vRows * vStepY;        // 117 px
+      const vTipY  = bandY + vH;
+      const diamY  = bandY + vH * 0.58;
+      const treeY  = bandY + vH * 0.28;
 
-      crownArch(cx, cy + 6, c1, d);
-      largeDownV(cx, vApexY, c2, d + 28);
+      band(cx, bandY, c1, d);
+      crown(cx, bandY - sp, c1, d + 5);
+      largeDownV(cx, bandY, c2, d + 20);
+      innerTree(cx - sp * 3, treeY, c1, d + 45);
+      innerTree(cx + sp * 3, treeY, c1, d + 45);
       dm(cx, diamY, 13, c1, d + 62, 0.76);
       dm(cx, diamY,  7, c1, d + 72, 0.70);
-      iBeamColumn(cx - tileW * 0.43, vApexY + 4, +1, c2, d + 46);
-      iBeamColumn(cx + tileW * 0.43, vApexY + 4, -1, c2, d + 46);
-      pendant(cx, vTipY, c1, d + 88);
+      iBeamColumn(cx - tileW * 0.48, bandY + 4, +1, c2, d + 40);
+      iBeamColumn(cx + tileW * 0.48, bandY + 4, -1, c2, d + 40);
+      pendant(cx, vTipY, c1, d + 85);
     }
 
     for (let col = -1; col * tileW < W + tileW; col++) {
