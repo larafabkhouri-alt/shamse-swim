@@ -463,46 +463,121 @@ function initTatreezCanvas(canvasId) {
   }
 
   function buildMotifs() {
-    const motifs  = [];
-    const colStep = 88;
-    const rowStep = 78;
+    const motifs = [];
+    const tileW  = 155;
+    const tileH  = 210;
 
-    for (let col = 0; col * colStep < W + colStep * 2; col++) {
-      for (let row = 0; row * rowStep < H + rowStep * 2; row++) {
-        const x     = col * colStep + (row % 2) * 44 - 20;
-        const y     = row * rowStep - 20;
-        const type  = (col + row * 2) % 6;
-        const color = colours[(col * 3 + row * 2) % colours.length];
-        const delay = Math.random() * 300;
+    function xc(x, y, color, delay, alpha = 0.62) {
+      motifs.push({ kind: 'cross', x, y, size: 4.5, color, delay, alpha: 0, targetAlpha: alpha });
+    }
+    function dm(x, y, sz, color, delay, alpha = 0.52) {
+      motifs.push({ kind: 'diamond', x, y, size: sz, color, delay, alpha: 0, targetAlpha: alpha });
+    }
 
-        if (type === 0) {
-          motifs.push({ kind: 'shamse', x, y, r: 18, color, delay, alpha: 0, targetAlpha: 0.75 });
-          for (let k = 0; k < 8; k++) {
-            const a = (k / 8) * Math.PI * 2;
-            motifs.push({
-              kind: 'cross', x: x + 30 * Math.cos(a), y: y + 30 * Math.sin(a),
-              size: 5, color, delay: delay + k * 14, alpha: 0, targetAlpha: 0.55,
-            });
-          }
-        } else if (type === 1 || type === 4) {
-          motifs.push({ kind: 'diamond', x, y, size: 18, color, delay, alpha: 0, targetAlpha: 0.55 });
-          motifs.push({ kind: 'diamond', x, y, size: 10, color, delay: delay + 20, alpha: 0, targetAlpha: 0.45 });
-        } else {
-          for (let di = 0; di < 3; di++) {
-            for (let dj = 0; dj < 3; dj++) {
-              motifs.push({
-                kind: 'cross',
-                x: x + di * 16 - 16,
-                y: y + dj * 16 - 16,
-                size: 5, color,
-                delay: delay + (di + dj) * 18,
-                alpha: 0, targetAlpha: 0.5,
-              });
-            }
+    // Candelabra tree: base at (bx, by), grows upward
+    function tree(bx, by, color, d) {
+      const sp = 11;
+      for (let i = 0; i <= 7; i++) xc(bx, by - i * sp, color, d + i * 13);
+      // Bottom branches (widest)
+      for (let b = 1; b <= 4; b++) {
+        xc(bx + b * sp, by - sp,      color, d + 38 + b * 9, 0.58);
+        xc(bx - b * sp, by - sp,      color, d + 38 + b * 9, 0.58);
+      }
+      xc(bx + sp * 4.7, by + sp * 0.4, color, d + 82, 0.40);
+      xc(bx - sp * 4.7, by + sp * 0.4, color, d + 82, 0.40);
+      // Mid branches
+      for (let b = 1; b <= 3; b++) {
+        xc(bx + b * sp, by - sp * 3.6, color, d + 54 + b * 9, 0.58);
+        xc(bx - b * sp, by - sp * 3.6, color, d + 54 + b * 9, 0.58);
+      }
+      xc(bx + sp * 3.6, by - sp * 2.9, color, d + 98,  0.40);
+      xc(bx - sp * 3.6, by - sp * 2.9, color, d + 98,  0.40);
+      // Upper branches
+      for (let b = 1; b <= 2; b++) {
+        xc(bx + b * sp, by - sp * 6.1, color, d + 68 + b * 9, 0.58);
+        xc(bx - b * sp, by - sp * 6.1, color, d + 68 + b * 9, 0.58);
+      }
+      // Top fork
+      xc(bx - sp * 0.8, by - sp * 7.3, color, d + 108, 0.52);
+      xc(bx + sp * 0.8, by - sp * 7.3, color, d + 108, 0.52);
+      xc(bx,            by - sp * 8.1, color, d + 118, 0.52);
+    }
+
+    // Inverted tree: tip at (tx, ty), grows downward
+    function invertedTree(tx, ty, color, d) {
+      const sp = 10;
+      xc(tx - sp * 0.8, ty,        color, d + 5,  0.46);
+      xc(tx + sp * 0.8, ty,        color, d + 5,  0.46);
+      xc(tx,            ty + sp,   color, d + 14, 0.48);
+      for (let b = 1; b <= 2; b++) {
+        xc(tx + b * sp, ty + sp * 2.2, color, d + 28 + b * 8, 0.46);
+        xc(tx - b * sp, ty + sp * 2.2, color, d + 28 + b * 8, 0.46);
+      }
+      for (let b = 1; b <= 3; b++) {
+        xc(tx + b * sp, ty + sp * 4,   color, d + 48 + b * 8, 0.46);
+        xc(tx - b * sp, ty + sp * 4,   color, d + 48 + b * 8, 0.46);
+      }
+      for (let i = 2; i <= 4; i++) xc(tx, ty + sp * i, color, d + i * 11, 0.50);
+    }
+
+    // Triangle arch: apex at (ax, ay), opens downward
+    function triangleArch(ax, ay, color, d) {
+      const sp   = 11;
+      const rows = 8;
+      for (let r = 0; r <= rows; r++) {
+        const y      = ay + r * sp * 1.1;
+        const spread = r * sp;
+        xc(ax - spread, y, color, d + r * 14, 0.62);
+        if (r > 0) xc(ax + spread, y, color, d + r * 14, 0.62);
+        if (r === rows) {
+          for (let f = -(rows - 1); f < rows; f++) {
+            if (f !== 0) xc(ax + f * sp, y, color, d + rows * 14 + Math.abs(f) * 5, 0.52);
           }
         }
       }
+      dm(ax, ay + rows * sp * 0.55, 11, color, d + 88,  0.50);
+      dm(ax, ay + rows * sp * 0.55, 6,  color, d + 98,  0.44);
+      xc(ax, ay + rows * sp * 0.3,  color, d + 68, 0.50);
     }
+
+    // Side bracket: column + L-arm, dir = ±1
+    function sideBracket(bx, by, dir, color, d) {
+      const sp = 11;
+      for (let i = 0; i < 4; i++) xc(bx, by + i * sp, color, d + i * 12, 0.46);
+      xc(bx + dir * sp,     by,          color, d + 24, 0.40);
+      xc(bx + dir * sp,     by + sp * 3, color, d + 34, 0.40);
+      xc(bx + dir * sp * 2, by + sp,     color, d + 44, 0.36);
+      xc(bx + dir * sp * 2, by + sp * 2, color, d + 49, 0.36);
+    }
+
+    // Full-width border row of crosses
+    function borderLine(y, color, d) {
+      const sp = 22;
+      for (let x = -60; x < W + 100; x += sp) {
+        xc(x, y, color, d + Math.max(0, x) / sp * 6, 0.40);
+      }
+    }
+
+    for (let col = -1; col * tileW < W + tileW; col++) {
+      for (let row = -1; row * tileH < H + tileH; row++) {
+        const cx = col * tileW + (Math.abs(row) % 2 === 1 ? tileW * 0.5 : 0);
+        const cy = row * tileH;
+        const c1 = colours[((col + 20) * 2  + (row + 20))       % colours.length];
+        const c2 = colours[((col + 20) * 3  + (row + 20) * 2 + 1) % colours.length];
+        const d  = Math.random() * 220;
+
+        tree(cx, cy + 95,  c1, d);
+        triangleArch(cx, cy + 100, c2, d + 25);
+        invertedTree(cx, cy + 195, c1, d + 50);
+        sideBracket(cx - tileW * 0.38, cy + 85, +1, c2, d + 65);
+        sideBracket(cx + tileW * 0.38, cy + 85, -1, c2, d + 65);
+      }
+    }
+
+    for (let row = 0; row * tileH < H + tileH * 2; row++) {
+      borderLine(row * tileH + 192, colours[row % colours.length], row * 22);
+    }
+
     return motifs;
   }
 
