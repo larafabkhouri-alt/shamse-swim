@@ -464,115 +464,91 @@ function initTatreezCanvas(canvasId, opts) {
 
   function buildMotifs() {
     const motifs = [];
-    const tileW  = 160;
-    const tileH  = 185;
-    const sp     = 10;
+    const SC    = 5;            // px per stitch
+    const tileW = 40 * SC;     // 200 px
+    const tileH = 40 * SC;     // 200 px
+    const csz   = SC * 0.44;   // cross arm half-length
 
-    function xc(x, y, color, delay, alpha = 0.88) {
-      motifs.push({ kind: 'cross', x, y, size: 4.5, color, delay, alpha: 0, targetAlpha: alpha });
-    }
-    function dm(x, y, sz, color, delay, alpha = 0.78) {
-      motifs.push({ kind: 'diamond', x, y, size: sz, color, delay, alpha: 0, targetAlpha: alpha });
+    function xc(x, y, color, delay, alpha) {
+      motifs.push({ kind:'cross', x, y, size: csz, color, delay, alpha:0, targetAlpha: alpha });
     }
 
-    // Horizontal band of evenly-spaced crosses spanning full tile width
-    function band(cx, cy, color, d) {
-      const half = Math.ceil(tileW / sp / 2) + 1;
-      for (let i = -half; i <= half; i++) {
-        xc(cx + i * sp, cy, color, d + Math.abs(i) * 3, 0.86);
-      }
+    // Pixel-accurate stitch tile (40×40 stitch-units, band at y=20).
+    // Each entry: [stitch_x, stitch_y, alpha]
+    const STITCHES = [];
+
+    // Band — full row at y=20
+    for (let x = 0; x < 40; x++)
+      STITCHES.push([x, 20, 0.86]);
+
+    // Crown — large upward V, apex (20,0) → arms (1,19) & (39,19)
+    for (let t = 0; t <= 19; t++) {
+      STITCHES.push([20 - t, t, 0.82]);
+      if (t > 0) STITCHES.push([20 + t, t, 0.82]);
     }
 
-    // Small upward crown/fork just above the band
-    function crown(cx, cy, color, d) {
-      xc(cx,        cy,          color, d,      0.80); // stem base
-      xc(cx,        cy - sp,     color, d + 5,  0.78); // stem tip
-      xc(cx - sp,   cy - sp * 2, color, d + 10, 0.74); // left prong
-      xc(cx,        cy - sp * 2, color, d + 10, 0.76); // center prong
-      xc(cx + sp,   cy - sp * 2, color, d + 10, 0.74); // right prong
+    // Pendant — large downward V below band, apex (20,21) → arms (2,39) & (38,39)
+    for (let t = 0; t <= 18; t++) {
+      STITCHES.push([20 - t, 21 + t, 0.82]);
+      if (t > 0) STITCHES.push([20 + t, 21 + t, 0.82]);
     }
 
-    // Large downward V — wide at top (band level), tapers to point at bottom
-    function largeDownV(ax, ay, color, d) {
-      const rows  = 9;
-      const stepY = 13;
-      const halfW = Math.round(tileW * 0.42);
-      for (let r = 0; r <= rows; r++) {
-        const y      = ay + r * stepY;
-        const spread = Math.round(halfW * (rows - r) / rows / sp) * sp;
-        xc(ax - spread, y, color, d + r * 12, 0.88);
-        if (spread > 0) xc(ax + spread, y, color, d + r * 12, 0.88);
-      }
-    }
+    // Diamond — lattice diamond above band, top at (20,13), widest (5 wide) at y=17
+    [
+      [20,13],
+      [19,14],[21,14],
+      [18,15],[20,15],[22,15],
+      [17,16],[19,16],[21,16],[23,16],
+      [16,17],[18,17],[20,17],[22,17],[24,17],
+      [17,18],[19,18],[21,18],[23,18],
+      [18,19],[20,19],[22,19],
+    ].forEach(([x,y]) => STITCHES.push([x, y, 0.74]));
 
-    // Small candelabra tree inside V (left or right of center)
-    function innerTree(cx, cy, color, d) {
-      for (let i = 0; i < 4; i++) xc(cx, cy + i * sp, color, d + i * 7, 0.72);
-      xc(cx, cy - sp, color, d + 5, 0.70);
-      for (let j = 1; j <= 2; j++) {
-        xc(cx - j * sp, cy + sp, color, d + 16 + j * 6, 0.66);
-        xc(cx + j * sp, cy + sp, color, d + 16 + j * 6, 0.66);
-      }
-      xc(cx - sp, cy + sp * 2.5, color, d + 30, 0.62);
-      xc(cx + sp, cy + sp * 2.5, color, d + 30, 0.62);
-    }
+    // I-beams — short vertical bars with top/bottom brackets, flanking diamond
+    // Left at x=12, right at x=28
+    for (let y = 14; y <= 17; y++) { STITCHES.push([12, y, 0.64]); STITCHES.push([28, y, 0.64]); }
+    [[11,14],[13,14],[11,17],[13,17],[27,14],[29,14],[27,17],[29,17]]
+      .forEach(([x,y]) => STITCHES.push([x, y, 0.58]));
 
-    // Tall I-beam column — vertical bar + top/mid/bottom horizontal arms
-    function iBeamColumn(cx, cy, dir, color, d) {
-      for (let i = 0; i < 7; i++) xc(cx, cy + i * sp, color, d + i * 9, 0.68);
-      for (let j = 1; j <= 3; j++) {
-        xc(cx + dir * j * sp, cy,          color, d + j * 7 + 20, 0.60);
-        xc(cx + dir * j * sp, cy + sp * 6, color, d + j * 7 + 27, 0.60);
-      }
-      for (let j = 1; j <= 2; j++)
-        xc(cx + dir * j * sp, cy + sp * 3, color, d + j * 7 + 34, 0.54);
-    }
+    // Inner trees — cypress-style, branches widen downward
+    // Center-top: stem x=20, y=5..9; branches at y=7,8,9
+    for (let y = 5; y <= 9; y++) STITCHES.push([20, y, 0.72]);
+    [[19,7],[21,7],[18,8],[22,8],[17,9],[23,9]]
+      .forEach(([x,y]) => STITCHES.push([x, y, 0.66]));
+    // Left of center: stem x=7, y=15..19; branches at y=17,18
+    for (let y = 15; y <= 19; y++) STITCHES.push([7, y, 0.72]);
+    [[6,17],[8,17],[5,18],[9,18]]
+      .forEach(([x,y]) => STITCHES.push([x, y, 0.66]));
+    // Right of center: stem x=33, y=15..19; branches at y=17,18
+    for (let y = 15; y <= 19; y++) STITCHES.push([33, y, 0.72]);
+    [[32,17],[34,17],[31,18],[35,18]]
+      .forEach(([x,y]) => STITCHES.push([x, y, 0.66]));
+    // Center-bottom (below band): stem x=20, y=26..30; branches at y=28,29,30
+    for (let y = 26; y <= 30; y++) STITCHES.push([20, y, 0.72]);
+    [[19,28],[21,28],[18,29],[22,29],[17,30],[23,30]]
+      .forEach(([x,y]) => STITCHES.push([x, y, 0.66]));
 
-    // Pendant hanging below V apex — inverted branching tree
-    function pendant(tx, ty, color, d) {
-      xc(tx, ty,                color, d,       0.74);
-      xc(tx, ty + sp,           color, d + 8,   0.72);
-      for (let b = 1; b <= 2; b++) {
-        xc(tx + b * sp, ty + sp * 2,   color, d + 18 + b * 8, 0.68);
-        xc(tx - b * sp, ty + sp * 2,   color, d + 18 + b * 8, 0.68);
-      }
-      for (let b = 1; b <= 3; b++) {
-        xc(tx + b * sp, ty + sp * 3.5, color, d + 36 + b * 7, 0.66);
-        xc(tx - b * sp, ty + sp * 3.5, color, d + 36 + b * 7, 0.66);
-      }
-      xc(tx, ty + sp * 4.5, color, d + 58, 0.70);
-    }
+    // V arms — three upward chevrons: center + two edge accents
+    // Center chevron: \ from (12,22)→(17,27), dip, / from (23,27)→(28,22)
+    // Edge left:  V apex at (4,21); edge right: V apex at (35,21)
+    [
+      [12,22],[13,23],[14,24],[15,25],[16,26],[17,27],
+      [18,26],[19,25],[21,25],[22,26],
+      [23,27],[24,26],[25,25],[26,24],[27,23],[28,22],
+      [0,25],[1,24],[2,23],[3,22],[4,21],[5,22],[6,23],[7,24],[8,25],
+      [31,25],[32,24],[33,23],[34,22],[35,21],[36,22],[37,23],[38,24],[39,25],
+    ].forEach(([x,y]) => STITCHES.push([x, y, 0.74]));
 
-    // Full tile: band → crown above → V from band → inner trees → diamond → I-beams → pendant
-    function tile(cx, cy, c1, c2, d) {
-      const bandY  = cy;
-      const vRows  = 9;
-      const vStepY = 13;
-      const vH     = vRows * vStepY;        // 117 px
-      const vTipY  = bandY + vH;
-      const diamY  = bandY + vH * 0.58;
-      const treeY  = bandY + vH * 0.28;
-
-      band(cx, bandY, c1, d);
-      crown(cx, bandY - sp, c1, d + 5);
-      largeDownV(cx, bandY, c2, d + 20);
-      innerTree(cx - sp * 3, treeY, c1, d + 45);
-      innerTree(cx + sp * 3, treeY, c1, d + 45);
-      dm(cx, diamY, 13, c1, d + 62, 0.76);
-      dm(cx, diamY,  7, c1, d + 72, 0.70);
-      iBeamColumn(cx - tileW * 0.48, bandY + 4, +1, c2, d + 40);
-      iBeamColumn(cx + tileW * 0.48, bandY + 4, -1, c2, d + 40);
-      pendant(cx, vTipY, c1, d + 85);
-    }
-
+    // Tile the canvas with half-stagger on odd rows
     for (let col = -1; col * tileW < W + tileW; col++) {
       for (let row = -1; row * tileH < H + tileH; row++) {
-        const cx = col * tileW + ((row + 20) % 2 === 1 ? tileW * 0.5 : 0);
-        const cy = row * tileH;
-        const c1 = colours[((col + 20) * 2 + (row + 20))         % colours.length];
-        const c2 = colours[((col + 20) * 3 + (row + 20) * 2 + 1) % colours.length];
-        const d  = Math.random() * 220;
-        tile(cx, cy, c1, c2, d);
+        const ox    = col * tileW + ((row + 20) % 2 === 1 ? tileW * 0.5 : 0);
+        const oy    = row * tileH;
+        const color = colours[((col + 20) * 3 + (row + 20) * 2) % colours.length];
+        const dBase = Math.random() * 160;
+        for (const [sx, sy, a] of STITCHES) {
+          xc(ox + sx * SC, oy + sy * SC, color, dBase + (sx + sy) * 1.8, a);
+        }
       }
     }
 
