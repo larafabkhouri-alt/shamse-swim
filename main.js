@@ -393,7 +393,7 @@ function initTatreezCanvas(canvasId, opts) {
   window.addEventListener('resize', resize, { passive: true });
 
   const colours = [
-    'rgba(255,232,124,1)',
+    'rgba(235,215,95,1)',
     'rgba(13,158,143,1)',
     'rgba(142,112,198,1)',
     'rgba(204,110,130,1)',
@@ -544,7 +544,7 @@ function initTatreezCanvas(canvasId, opts) {
       for (let row = -1; row * tileH < H + tileH; row++) {
         const ox    = col * tileW + ((row + 20) % 2 === 1 ? tileW * 0.5 : 0);
         const oy    = row * tileH;
-        const color = colours[((col + 20) * 3 + (row + 20) * 2) % colours.length];
+        const color = colours[(col * 5 + row * 7) % colours.length];
         const dBase = Math.random() * 160;
         for (const [sx, sy, a] of STITCHES) {
           xc(ox + sx * SC, oy + sy * SC, color, dBase + (sx + sy) * 1.8, a);
