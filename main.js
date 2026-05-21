@@ -419,23 +419,30 @@ function initTatreezCanvas(canvasId) {
     ctx.globalAlpha = alpha;
     ctx.fillStyle   = color;
     const s = r / 46; // scale from 100x100 design (radius=46)
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 16; i++) {
       ctx.save();
       ctx.translate(x, y);
-      ctx.rotate(i * Math.PI / 10); // 18° each
+      ctx.rotate(i * Math.PI / 8); // 22.5° each
       ctx.scale(s, s);
       ctx.translate(-50, -50);
       ctx.beginPath();
-      ctx.moveTo(47, 26);
-      ctx.bezierCurveTo(36, 22, 46, 7, 58, 4);
-      ctx.bezierCurveTo(63, 11, 59, 20, 53, 26);
+      ctx.moveTo(48.5, 25);
+      ctx.bezierCurveTo(45, 17, 49, 7, 50, 4);
+      ctx.bezierCurveTo(51, 7, 55, 17, 51.5, 25);
       ctx.closePath();
       ctx.fill();
       ctx.restore();
     }
+    // center ring
+    ctx.beginPath();
+    ctx.arc(x, y, r * 0.46, 0, Math.PI * 2);
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = color;
+    ctx.lineWidth   = r * 0.09;
+    ctx.stroke();
     // center disk
     ctx.beginPath();
-    ctx.arc(x, y, r * 0.33, 0, Math.PI * 2);
+    ctx.arc(x, y, r * 0.30, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
   }
