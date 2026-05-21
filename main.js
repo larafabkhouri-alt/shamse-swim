@@ -467,10 +467,10 @@ function initTatreezCanvas(canvasId) {
     const tileW  = 155;
     const tileH  = 210;
 
-    function xc(x, y, color, delay, alpha = 0.62) {
+    function xc(x, y, color, delay, alpha = 0.82) {
       motifs.push({ kind: 'cross', x, y, size: 4.5, color, delay, alpha: 0, targetAlpha: alpha });
     }
-    function dm(x, y, sz, color, delay, alpha = 0.52) {
+    function dm(x, y, sz, color, delay, alpha = 0.72) {
       motifs.push({ kind: 'diamond', x, y, size: sz, color, delay, alpha: 0, targetAlpha: alpha });
     }
 
@@ -480,44 +480,44 @@ function initTatreezCanvas(canvasId) {
       for (let i = 0; i <= 7; i++) xc(bx, by - i * sp, color, d + i * 13);
       // Bottom branches (widest)
       for (let b = 1; b <= 4; b++) {
-        xc(bx + b * sp, by - sp,      color, d + 38 + b * 9, 0.58);
-        xc(bx - b * sp, by - sp,      color, d + 38 + b * 9, 0.58);
+        xc(bx + b * sp, by - sp,      color, d + 38 + b * 9, 0.78);
+        xc(bx - b * sp, by - sp,      color, d + 38 + b * 9, 0.78);
       }
-      xc(bx + sp * 4.7, by + sp * 0.4, color, d + 82, 0.40);
-      xc(bx - sp * 4.7, by + sp * 0.4, color, d + 82, 0.40);
+      xc(bx + sp * 4.7, by + sp * 0.4, color, d + 82, 0.60);
+      xc(bx - sp * 4.7, by + sp * 0.4, color, d + 82, 0.60);
       // Mid branches
       for (let b = 1; b <= 3; b++) {
-        xc(bx + b * sp, by - sp * 3.6, color, d + 54 + b * 9, 0.58);
-        xc(bx - b * sp, by - sp * 3.6, color, d + 54 + b * 9, 0.58);
+        xc(bx + b * sp, by - sp * 3.6, color, d + 54 + b * 9, 0.78);
+        xc(bx - b * sp, by - sp * 3.6, color, d + 54 + b * 9, 0.78);
       }
-      xc(bx + sp * 3.6, by - sp * 2.9, color, d + 98,  0.40);
-      xc(bx - sp * 3.6, by - sp * 2.9, color, d + 98,  0.40);
+      xc(bx + sp * 3.6, by - sp * 2.9, color, d + 98,  0.60);
+      xc(bx - sp * 3.6, by - sp * 2.9, color, d + 98,  0.60);
       // Upper branches
       for (let b = 1; b <= 2; b++) {
-        xc(bx + b * sp, by - sp * 6.1, color, d + 68 + b * 9, 0.58);
-        xc(bx - b * sp, by - sp * 6.1, color, d + 68 + b * 9, 0.58);
+        xc(bx + b * sp, by - sp * 6.1, color, d + 68 + b * 9, 0.78);
+        xc(bx - b * sp, by - sp * 6.1, color, d + 68 + b * 9, 0.78);
       }
       // Top fork
-      xc(bx - sp * 0.8, by - sp * 7.3, color, d + 108, 0.52);
-      xc(bx + sp * 0.8, by - sp * 7.3, color, d + 108, 0.52);
-      xc(bx,            by - sp * 8.1, color, d + 118, 0.52);
+      xc(bx - sp * 0.8, by - sp * 7.3, color, d + 108, 0.72);
+      xc(bx + sp * 0.8, by - sp * 7.3, color, d + 108, 0.72);
+      xc(bx,            by - sp * 8.1, color, d + 118, 0.72);
     }
 
     // Inverted tree: tip at (tx, ty), grows downward
     function invertedTree(tx, ty, color, d) {
       const sp = 10;
-      xc(tx - sp * 0.8, ty,        color, d + 5,  0.46);
-      xc(tx + sp * 0.8, ty,        color, d + 5,  0.46);
-      xc(tx,            ty + sp,   color, d + 14, 0.48);
+      xc(tx - sp * 0.8, ty,        color, d + 5,  0.66);
+      xc(tx + sp * 0.8, ty,        color, d + 5,  0.66);
+      xc(tx,            ty + sp,   color, d + 14, 0.68);
       for (let b = 1; b <= 2; b++) {
-        xc(tx + b * sp, ty + sp * 2.2, color, d + 28 + b * 8, 0.46);
-        xc(tx - b * sp, ty + sp * 2.2, color, d + 28 + b * 8, 0.46);
+        xc(tx + b * sp, ty + sp * 2.2, color, d + 28 + b * 8, 0.66);
+        xc(tx - b * sp, ty + sp * 2.2, color, d + 28 + b * 8, 0.66);
       }
       for (let b = 1; b <= 3; b++) {
-        xc(tx + b * sp, ty + sp * 4,   color, d + 48 + b * 8, 0.46);
-        xc(tx - b * sp, ty + sp * 4,   color, d + 48 + b * 8, 0.46);
+        xc(tx + b * sp, ty + sp * 4,   color, d + 48 + b * 8, 0.66);
+        xc(tx - b * sp, ty + sp * 4,   color, d + 48 + b * 8, 0.66);
       }
-      for (let i = 2; i <= 4; i++) xc(tx, ty + sp * i, color, d + i * 11, 0.50);
+      for (let i = 2; i <= 4; i++) xc(tx, ty + sp * i, color, d + i * 11, 0.70);
     }
 
     // Triangle arch: apex at (ax, ay), opens downward
@@ -527,34 +527,34 @@ function initTatreezCanvas(canvasId) {
       for (let r = 0; r <= rows; r++) {
         const y      = ay + r * sp * 1.1;
         const spread = r * sp;
-        xc(ax - spread, y, color, d + r * 14, 0.62);
-        if (r > 0) xc(ax + spread, y, color, d + r * 14, 0.62);
+        xc(ax - spread, y, color, d + r * 14, 0.82);
+        if (r > 0) xc(ax + spread, y, color, d + r * 14, 0.82);
         if (r === rows) {
           for (let f = -(rows - 1); f < rows; f++) {
-            if (f !== 0) xc(ax + f * sp, y, color, d + rows * 14 + Math.abs(f) * 5, 0.52);
+            if (f !== 0) xc(ax + f * sp, y, color, d + rows * 14 + Math.abs(f) * 5, 0.72);
           }
         }
       }
-      dm(ax, ay + rows * sp * 0.55, 11, color, d + 88,  0.50);
-      dm(ax, ay + rows * sp * 0.55, 6,  color, d + 98,  0.44);
-      xc(ax, ay + rows * sp * 0.3,  color, d + 68, 0.50);
+      dm(ax, ay + rows * sp * 0.55, 11, color, d + 88,  0.70);
+      dm(ax, ay + rows * sp * 0.55, 6,  color, d + 98,  0.64);
+      xc(ax, ay + rows * sp * 0.3,  color, d + 68, 0.70);
     }
 
     // Side bracket: column + L-arm, dir = ±1
     function sideBracket(bx, by, dir, color, d) {
       const sp = 11;
-      for (let i = 0; i < 4; i++) xc(bx, by + i * sp, color, d + i * 12, 0.46);
-      xc(bx + dir * sp,     by,          color, d + 24, 0.40);
-      xc(bx + dir * sp,     by + sp * 3, color, d + 34, 0.40);
-      xc(bx + dir * sp * 2, by + sp,     color, d + 44, 0.36);
-      xc(bx + dir * sp * 2, by + sp * 2, color, d + 49, 0.36);
+      for (let i = 0; i < 4; i++) xc(bx, by + i * sp, color, d + i * 12, 0.66);
+      xc(bx + dir * sp,     by,          color, d + 24, 0.60);
+      xc(bx + dir * sp,     by + sp * 3, color, d + 34, 0.60);
+      xc(bx + dir * sp * 2, by + sp,     color, d + 44, 0.55);
+      xc(bx + dir * sp * 2, by + sp * 2, color, d + 49, 0.55);
     }
 
     // Full-width border row of crosses
     function borderLine(y, color, d) {
       const sp = 22;
       for (let x = -60; x < W + 100; x += sp) {
-        xc(x, y, color, d + Math.max(0, x) / sp * 6, 0.40);
+        xc(x, y, color, d + Math.max(0, x) / sp * 6, 0.60);
       }
     }
 
